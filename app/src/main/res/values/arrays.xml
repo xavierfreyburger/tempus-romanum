@@ -36,12 +36,36 @@
     <!-- Font colors arrays -->
     <string-array name="font_color_entries">
         <item>White</item>
+        <item>Light gray</item>
+        <item>Gray</item>
         <item>Black</item>
+        <item>Light blue</item>
+        <item>Deep blue</item>
+        <item>Dark blue</item>
+        <item>Light green</item>
+        <item>Dark green</item>
+        <item>Light red</item>
+        <item>Dark red</item>
+        <item>Light orange</item>
+        <item>Dark orange</item>
+        <item>Purple</item>
     </string-array>
 
     <string-array name="font_color_values">
         <item>colorWhite</item>
+        <item>colorGrayLight</item>
+        <item>colorGray</item>
         <item>colorBlack</item>
+        <item>colorBlueLight</item>
+        <item>colorBlueDeep</item>
+        <item>colorBlueDark</item>
+        <item>colorGreenLight</item>
+        <item>colorGreenDark</item>
+        <item>colorRedLight</item>
+        <item>colorRedDark</item>
+        <item>colorOrangeLight</item>
+        <item>colorOrangeDark</item>
+        <item>colorPurple</item>
     </string-array>
 
     <!-- Year references arrays -->

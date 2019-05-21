@@ -223,7 +223,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
 
         // Options concernant la date
+        // 2.1 Sentence mode
+        final boolean sentenceMode = pref.getBoolean(getString(R.string.saved_date_sentence_mode), Boolean.valueOf(getString(R.string.default_date_sentence_mode)));
+
+        // 2.2 Display week day
+        final boolean displayWeekDay = pref.getBoolean(getString(R.string.saved_date_week_day_display), Boolean.valueOf(getString(R.string.default_date_week_day_display)));
+
+        // 2.3 Display year
         final boolean yearDisplay = pref.getBoolean(getString(R.string.saved_date_year_display), Boolean.valueOf(getString(R.string.default_date_year_display)));
+
+        // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
         if(yearDisplay) {
             final String yearRefStr = pref.getString(getString(R.string.saved_date_year_reference), getString(R.string.default_date_year_reference));
@@ -233,8 +242,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             yearRef = Calendarium.InitiumCalendarii.SINE;
         }
 
+        // 2.5 Shorten era
+        final boolean shortenEra = pref.getBoolean(getString(R.string.saved_date_shorten_era_display), Boolean.valueOf(getString(R.string.default_date_shorten_era_display)));
+
         // Mise à jour du champ texte
-        outputDate.setText(Calendarium.tempus(date, false, false, yearRef, true));
+        outputDate.setText(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
 
         // Si la date n'est pas la même que celle renseignée par l'utilisateur, mise à jour des champs de saisies
         Calendar calendar = Calendar.getInstance();
@@ -302,8 +314,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         */
         switch (key)
         {
+            case "sentence_mode":
+            case "week_day_display":
             case "year_display":
             case "year_reference":
+            case "shorten_era":
                 updateDate();
             case "font_size":
             case "font_color":

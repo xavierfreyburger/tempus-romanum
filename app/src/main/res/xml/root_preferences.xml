@@ -1,8 +1,8 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Widget font -->
+    <!-- 1. Widget font -->
     <PreferenceCategory app:title="@string/widget_font_header">
-        <!-- Font size -->
+        <!-- 1.1 Font size -->
         <ListPreference
             app:defaultValue="@string/default_font_size"
             app:entries="@array/font_size_entries"
@@ -12,7 +12,7 @@
             app:useSimpleSummaryProvider="true"
             />
 
-        <!-- Font color -->
+        <!-- 1.2 Font color -->
         <ListPreference
             app:defaultValue="@string/default_font_color"
             app:entries="@array/font_color_entries"
@@ -23,13 +23,28 @@
             />
     </PreferenceCategory>
 
-    <!-- Date settings -->
+    <!-- 2. Date settings -->
     <PreferenceCategory app:title="@string/date_header">
+
+        <!-- 2.1 Sentence mode -->
+        <SwitchPreferenceCompat
+            app:key="@string/saved_date_sentence_mode"
+            app:title="@string/date_sentence_mode_title"
+            app:defaultValue="@string/default_date_sentence_mode"/>
+
+        <!-- 2.2 Display week day -->
+        <SwitchPreferenceCompat
+            app:key="@string/saved_date_week_day_display"
+            app:title="@string/date_week_day_display_title"
+            app:defaultValue="@string/default_date_week_day_display"/>
+
+        <!-- 2.3 Display year -->
         <SwitchPreferenceCompat
             app:key="@string/saved_date_year_display"
             app:title="@string/date_year_display_title"
             app:defaultValue="@string/default_date_year_display"/>
 
+        <!-- 2.4 Year reference -->
         <ListPreference
             app:dependency="@string/saved_date_year_display"
             app:defaultValue="@string/default_date_year_reference"
@@ -40,6 +55,11 @@
             app:useSimpleSummaryProvider="true"
             />
 
+        <!-- 2.5 Shorten era -->
+        <SwitchPreferenceCompat
+            app:key="@string/saved_date_shorten_era_display"
+            app:title="@string/date_shorten_era_display_title"
+            app:defaultValue="@string/default_date_shorten_era_display"/>
     </PreferenceCategory>
 
     <!--

@@ -7,11 +7,14 @@
     <string name="title_activity_settings">Settings</string>
     <string name="text_copied_to_clipboard">The text has been copied to the clipboard</string>
     <string name="date_reset">The date has been reset</string>
+    <string name="era_bc">B.C.</string>
+    <string name="era_ad">A.D.</string>
+    <string name="date_separator">/</string>
 
     <!-- Preference Titles -->
     <string name="preference_file_key">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>
     <!-- 1. Widget font -->
-    <string name="widget_font_header">Widget font</string>
+    <string name="widget_font_header">Widget font preferences</string>
     <!-- 1.1 Font size -->
     <string name="font_size_title">Font size</string>
     <string name="saved_font_size">font_size</string>
@@ -23,6 +26,14 @@
 
     <!-- 2. Date preferences -->
     <string name="date_header">Date preferences</string>
+    <!-- 2.1 Sentence mode -->
+    <string name="date_sentence_mode_title">Sentence mode</string>
+    <string name="saved_date_sentence_mode">sentence_mode</string>
+    <string name="default_date_sentence_mode">false</string>
+    <!-- 2.2 Display week day -->
+    <string name="date_week_day_display_title">Display week day</string>
+    <string name="saved_date_week_day_display">week_day_display</string>
+    <string name="default_date_week_day_display">false</string>
     <!-- 2.3 Display year -->
     <string name="date_year_display_title">Display year</string>
     <string name="saved_date_year_display">year_display</string>
@@ -31,4 +42,8 @@
     <string name="date_year_reference_title">Year reference</string>
     <string name="saved_date_year_reference">year_reference</string>
     <string name="default_date_year_reference">ANNO_DOMINI</string>
+    <!-- 2.2 Shorten era -->
+    <string name="date_shorten_era_display_title">Shorten era</string>
+    <string name="saved_date_shorten_era_display">shorten_era</string>
+    <string name="default_date_shorten_era_display">true</string>
 </resources>

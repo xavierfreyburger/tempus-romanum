@@ -35,9 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="84dp"
+        android:layout_marginEnd="84dp"
         android:layout_marginBottom="16dp"
-        android:clickable="true"
         app:srcCompat="@drawable/ic_today" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

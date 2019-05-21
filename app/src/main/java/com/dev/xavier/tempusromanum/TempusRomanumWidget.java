@@ -51,8 +51,16 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         final int colorResId = context.getResources().getIdentifier(colorName,"color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
-        // 2.3 display year
+        // 2.1 Sentence mode
+        final boolean sentenceMode = pref.getBoolean(context.getString(R.string.saved_date_sentence_mode), Boolean.valueOf(context.getString(R.string.default_date_sentence_mode)));
+
+        // 2.2 Display week day
+        final boolean displayWeekDay = pref.getBoolean(context.getString(R.string.saved_date_week_day_display), Boolean.valueOf(context.getString(R.string.default_date_week_day_display)));
+
+        // 2.3 Display year
         final boolean yearDisplay = pref.getBoolean(context.getString(R.string.saved_date_year_display), Boolean.valueOf(context.getString(R.string.default_date_year_display)));
+
+        // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
         if(yearDisplay) {
             final String yearRefStr = pref.getString(context.getString(R.string.saved_date_year_reference), context.getString(R.string.default_date_year_reference));
@@ -61,6 +69,9 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         else {
              yearRef = Calendarium.InitiumCalendarii.SINE;
         }
+
+        // 2.5 Shorten era
+        final boolean shortenEra = pref.getBoolean(context.getString(R.string.saved_date_shorten_era_display), Boolean.valueOf(context.getString(R.string.default_date_shorten_era_display)));
 
         // Faut-il calculer la mise à jour ?
         if(currentDate != null)
@@ -80,7 +91,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // Calcul de la date en latin
         // TODO convertir à la nouvelle api
-        CharSequence widgetText = Calendarium.tempus(currentDate, false, false, yearRef, true);
+        CharSequence widgetText = Calendarium.tempus(currentDate, sentenceMode, displayWeekDay, yearRef, shortenEra);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
