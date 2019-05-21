@@ -19,10 +19,26 @@ import java.util.GregorianCalendar;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-public class Calendarium {
-    public static String tempus(Date p_tempus)
+public class Calendarium
+{
+    public enum InitiumCalendarii
     {
-        Calendar calendarium = Calendar.getInstance();
+        SINE, // les années ne sont pas affichées
+        ANNO_DOMINI, // les années sont comptées depuis JC
+        AB_URBE_CONDITA, // les années sont comptées depuis la création de Rome
+    }
+
+    /**
+     * @param p_tempus date a convertir en latin
+     * @param p_est si true, la traduction commence par "Est ..."
+     * @param p_nomenDiei si true, ajoute le jour de la semaine
+     * @param p_initium Point de référence pour les années.
+     * @param p_eraBrevis si true, l’erre sera abrégée (A.D. ou  A.U.C.), sinon elle sera en toute lettre.
+     * @return
+     */
+    public static String tempus(Date p_tempus, boolean p_est, boolean p_nomenDiei, InitiumCalendarii p_initium, boolean p_eraBrevis)
+    {
+        Calendar calendarium = new GregorianCalendar();
         calendarium.setTime(p_tempus);
 
         int dies = calendarium.get(Calendar.DAY_OF_MONTH);
@@ -30,8 +46,15 @@ public class Calendarium {
         int idus = idusMensium(mensis);
         int nonae = idus-8;
         int dieiMensis=calendarium.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int diesHebdomadis=calendarium.get(Calendar.DAY_OF_WEEK);
 
         StringBuilder summa=new StringBuilder();
+
+        if (p_est)
+            summa.append("Est ");
+
+        if (p_nomenDiei)
+            summa.append(nomenDiei(diesHebdomadis));
 
         if (dies==1)
             summa	.append("kalendis ")
@@ -67,18 +90,62 @@ public class Calendarium {
             summa 	.append("pridie kalendas ")
                     .append(mensesRomaniAccusativus(mensis+1));
 
-        String annusRomanus = romanusNumerus(calendarium.get(Calendar.YEAR));
+        if (p_initium == InitiumCalendarii.AB_URBE_CONDITA)
+        {
+            int annus=calendarium.get(Calendar.YEAR);
 
-        switch (calendarium.get(Calendar.ERA)) {
-            case GregorianCalendar.AD:
-                summa.append(" ").append(annusRomanus).append(" A.D.");
-                break;
-            case GregorianCalendar.BC:
-                summa.append(" ").append(annusRomanus).append(" B.C.");
-                break;
+            // si est ante diem undecimum kalendas maias, annum uno minuit quia Roma ante diem undecimum kalendas maias aedificata est.
+            if (calendarium.get(Calendar.MONTH) < Calendar.APRIL || (calendarium.get(Calendar.MONTH) == Calendar.APRIL) && (calendarium.get(Calendar.DAY_OF_MONTH) < 21))
+                annus--;
+
+            // Quia Roma in DCCLIII aedificatus est.
+            if (calendarium.get(GregorianCalendar.ERA) == GregorianCalendar.AD)
+                annus+=753;
+            else
+                annus=754-annus;
+
+            boolean anteUrbemConditam=false;
+            if (annus<=0)
+            {
+                annus=-annus+1;
+                anteUrbemConditam=true;
+            }
+
+            String annusRomanus = romanusNumerus(annus);
+
+            if (anteUrbemConditam)
+                summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " Ant.U.C." : " ante Urbem conditam.");
+            else
+                summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.U.C." : " ab Urbe condita.");
         }
+        else if (p_initium == InitiumCalendarii.ANNO_DOMINI)
+        {
+            String annusRomanus = romanusNumerus(calendarium.get(Calendar.YEAR));
+            if (calendarium.get(GregorianCalendar.ERA) == GregorianCalendar.AD)
+                summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.D." : " anno domini.");
+            else
+                summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.C.N." : " ante christum natum.");
+        }
+        else
+            summa.append(".");
 
         return summa.toString();
+    }
+
+    private static String nomenDiei (int p_diesHebdomadis)
+    {
+        switch (p_diesHebdomadis)
+        {
+            case Calendar.SUNDAY: return "dies solis ";
+            case Calendar.MONDAY : return "dies lunae ";
+            case Calendar.TUESDAY : return "dies Martis ";
+            case Calendar.WEDNESDAY : return "dies Mercurii ";
+            case Calendar.THURSDAY : return "dies Jovis ";
+            case Calendar.FRIDAY : return "dies Veneris ";
+            case Calendar.SATURDAY : return "dies Saturni ";
+        }
+
+        throw new IllegalArgumentException (String.valueOf(p_diesHebdomadis));
     }
 
     private static int idusMensium(int p_mensis)
@@ -156,7 +223,7 @@ public class Calendarium {
             case 19 :	return "undevincesimum";
         }
 
-        return "error";
+        throw new IllegalArgumentException (String.valueOf(p_arg));
     }
 
     private static String romanusNumerus(int p_numerus)

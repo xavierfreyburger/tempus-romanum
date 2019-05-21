@@ -13,6 +13,8 @@ import android.util.TypedValue;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,8 +42,15 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // Chargement des préférences
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        String defaultFontSize = context.getResources().getString(R.string.default_font_size);
-        int fontSize = Integer.valueOf(pref.getString(context.getString(R.string.saved_font_size), defaultFontSize));
+
+        // 1.1 font size
+        final int fontSize = Integer.valueOf(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
+
+        // 1.2 font color
+        final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
+        final int colorResId = context.getResources().getIdentifier(colorName,"color", context.getPackageName());
+        final int fontColor = ContextCompat.getColor(context, colorResId);
+
 
         // Faut-il calculer la mise à jour ?
         if(currentDate != null)
@@ -60,8 +69,8 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         }
 
         // Calcul de la date en latin
-        CharSequence widgetText = Calendarium.tempus(currentDate);
-
+        // TODO convertir à la nouvelle api
+        CharSequence widgetText = Calendarium.tempus(currentDate, false, false, Calendarium.InitiumCalendarii.ANNO_DOMINI, true);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
@@ -69,7 +78,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         // Set font size
         views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP,fontSize);
         // Set font color
-        // TODO views.setTextColor();
+        views.setTextColor(R.id.appwidget_text, fontColor);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -82,7 +91,6 @@ public class TempusRomanumWidget extends AppWidgetProvider {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setComponent(new ComponentName(context.getPackageName(), MainActivity.class.getName()));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            // RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
             views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         } catch (ActivityNotFoundException e) {

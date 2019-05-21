@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             public void onClick(View view) {
                 // Force today date
                 updateDate(true);
-                Snackbar.make(view, "The date has been reset", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         newd = 1;
                     }
                 }
-                if(d!= null)
+                if(d != null)
                 {
                     updateDay = newd != d;
                     d = newd;
@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             date = c.getTime();
         }
-        //  + " --- " + date.toGMTString()
-        outputDate.setText(Calendarium.tempus(date));
+        // TODO convertir à la nouvelle api
+        outputDate.setText(Calendarium.tempus(date, false, false, Calendarium.InitiumCalendarii.ANNO_DOMINI, true));
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         lockTextWatcher = true;
@@ -278,9 +278,18 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        /*
         if (key.equals("font_size")) {
             // Update widget
             updateWidget();
+        }
+        */
+        switch (key)
+        {
+            case "font_size":
+            case "font_color":
+                updateWidget();
+                break;
         }
     }
 

@@ -31,4 +31,14 @@
         <item>30</item>
         <item>36</item>
     </string-array>
+
+    <string-array name="font_color_entries">
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
+
+    <string-array name="font_color_values">
+        <item>colorWhite</item>
+        <item>colorBlack</item>
+    </string-array>
 </resources>
