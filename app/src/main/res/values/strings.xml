@@ -11,14 +11,24 @@
     <!-- Preference Titles -->
     <string name="preference_file_key">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>
     <!-- 1. Widget font -->
+    <string name="widget_font_header">Widget font</string>
     <!-- 1.1 Font size -->
     <string name="font_size_title">Font size</string>
-    <string name="widget_font_header">Widget font</string>
     <string name="saved_font_size">font_size</string>
     <string name="default_font_size">12</string>
     <!-- 1.2 Font color -->
     <string name="font_color_title">Font color</string>
-    <string name="widget_color_header">Sync</string>
     <string name="saved_font_color">font_color</string>
     <string name="default_font_color">colorWhite</string>
+
+    <!-- 2. Date preferences -->
+    <string name="date_header">Date preferences</string>
+    <!-- 2.3 Display year -->
+    <string name="date_year_display_title">Display year</string>
+    <string name="saved_date_year_display">year_display</string>
+    <string name="default_date_year_display">true</string>
+    <!-- 2.4 Year reference -->
+    <string name="date_year_reference_title">Year reference</string>
+    <string name="saved_date_year_reference">year_reference</string>
+    <string name="default_date_year_reference">ANNO_DOMINI</string>
 </resources>

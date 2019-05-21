@@ -51,6 +51,16 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         final int colorResId = context.getResources().getIdentifier(colorName,"color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
+        // 2.3 display year
+        final boolean yearDisplay = pref.getBoolean(context.getString(R.string.saved_date_year_display), Boolean.valueOf(context.getString(R.string.default_date_year_display)));
+        final Calendarium.InitiumCalendarii yearRef;
+        if(yearDisplay) {
+            final String yearRefStr = pref.getString(context.getString(R.string.saved_date_year_reference), context.getString(R.string.default_date_year_reference));
+            yearRef = Calendarium.InitiumCalendarii.valueOf(yearRefStr);
+        }
+        else {
+             yearRef = Calendarium.InitiumCalendarii.SINE;
+        }
 
         // Faut-il calculer la mise à jour ?
         if(currentDate != null)
@@ -70,7 +80,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // Calcul de la date en latin
         // TODO convertir à la nouvelle api
-        CharSequence widgetText = Calendarium.tempus(currentDate, false, false, Calendarium.InitiumCalendarii.ANNO_DOMINI, true);
+        CharSequence widgetText = Calendarium.tempus(currentDate, false, false, yearRef, true);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);

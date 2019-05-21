@@ -23,6 +23,25 @@
             />
     </PreferenceCategory>
 
+    <!-- Date settings -->
+    <PreferenceCategory app:title="@string/date_header">
+        <SwitchPreferenceCompat
+            app:key="@string/saved_date_year_display"
+            app:title="@string/date_year_display_title"
+            app:defaultValue="@string/default_date_year_display"/>
+
+        <ListPreference
+            app:dependency="@string/saved_date_year_display"
+            app:defaultValue="@string/default_date_year_reference"
+            app:entries="@array/date_year_reference_entries"
+            app:entryValues="@array/date_year_reference_values"
+            app:key="@string/saved_date_year_reference"
+            app:title="@string/date_year_reference_title"
+            app:useSimpleSummaryProvider="true"
+            />
+
+    </PreferenceCategory>
+
     <!--
     <PreferenceCategory app:title="@string/messages_header">
 

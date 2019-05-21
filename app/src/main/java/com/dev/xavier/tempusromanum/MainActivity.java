@@ -219,8 +219,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             date = c.getTime();
         }
-        // TODO convertir à la nouvelle api
-        outputDate.setText(Calendarium.tempus(date, false, false, Calendarium.InitiumCalendarii.ANNO_DOMINI, true));
+        // TODO implémenter nouvelles options
+        SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Options concernant la date
+        final boolean yearDisplay = pref.getBoolean(getString(R.string.saved_date_year_display), Boolean.valueOf(getString(R.string.default_date_year_display)));
+        final Calendarium.InitiumCalendarii yearRef;
+        if(yearDisplay) {
+            final String yearRefStr = pref.getString(getString(R.string.saved_date_year_reference), getString(R.string.default_date_year_reference));
+            yearRef = Calendarium.InitiumCalendarii.valueOf(yearRefStr);
+        }
+        else {
+            yearRef = Calendarium.InitiumCalendarii.SINE;
+        }
+
+        // Mise à jour du champ texte
+        outputDate.setText(Calendarium.tempus(date, false, false, yearRef, true));
+
+        // Si la date n'est pas la même que celle renseignée par l'utilisateur, mise à jour des champs de saisies
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         lockTextWatcher = true;
@@ -286,6 +302,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         */
         switch (key)
         {
+            case "year_display":
+            case "year_reference":
+                updateDate();
             case "font_size":
             case "font_color":
                 updateWidget();

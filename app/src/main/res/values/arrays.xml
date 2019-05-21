@@ -10,6 +10,7 @@
         <item>reply_all</item>
     </string-array>
 
+    <!-- Font size arrays -->
     <string-array name="font_size_entries">
         <item>8</item>
         <item>10</item>
@@ -32,6 +33,7 @@
         <item>36</item>
     </string-array>
 
+    <!-- Font colors arrays -->
     <string-array name="font_color_entries">
         <item>White</item>
         <item>Black</item>
@@ -40,5 +42,16 @@
     <string-array name="font_color_values">
         <item>colorWhite</item>
         <item>colorBlack</item>
+    </string-array>
+
+    <!-- Year references arrays -->
+    <string-array name="date_year_reference_entries">
+        <item>Anno Domini</item>
+        <item>Rome fondation</item>
+    </string-array>
+
+    <string-array name="date_year_reference_values">
+        <item>ANNO_DOMINI</item>
+        <item>AB_URBE_CONDITA</item>
     </string-array>
 </resources>
