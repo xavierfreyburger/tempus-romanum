@@ -10,6 +10,7 @@
     <string name="era_bc">B.C.</string>
     <string name="era_ad">A.D.</string>
     <string name="date_separator" translatable="false">/</string>
+    <string name="latin_locale_code" translatable="false">la</string>
 
     <!-- Preference Titles -->
     <string name="preference_file_key" translatable="false">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>
@@ -58,8 +59,16 @@
     <string name="default_date_year_reference" translatable="false">ANNO_DOMINI</string>
     <string name="year_reference_anno_domini">Anno Domini</string>
     <string name="year_reference_rome_fondation">Rome fondation</string>
-    <!-- 2.2 Shorten era -->
+    <!-- 2.5 Shorten era -->
     <string name="date_shorten_era_display_title">Shorten era</string>
     <string name="saved_date_shorten_era_display" translatable="false">shorten_era</string>
     <string name="default_date_shorten_era_display" translatable="false">true</string>
+
+    <!-- 3. Force Latin -->
+    <string name="force_latin_header">Language</string>
+    <string name="force_latin">Latin</string>
+    <string name="force_latin_on">Latin</string>
+    <string name="force_latin_off">System</string>
+    <string name="saved_force_latin" translatable="false">force_latin</string>
+    <string name="default_force_latin" translatable="false">false</string>
 </resources>

@@ -32,4 +32,8 @@
     <string name="widget_font_header">Police de caractère du widget</string>
     <string name="year_reference_anno_domini">"Jésus-Christ "</string>
     <string name="year_reference_rome_fondation">Fondation de Rome</string>
+    <string name="force_latin_header">Langue</string>
+    <string name="force_latin_off">Système</string>
+    <string name="force_latin_on">Latin</string>
+    <string name="force_latin">Latin</string>
 </resources>
