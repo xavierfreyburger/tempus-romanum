@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+    <string name="add_widget">Ajouter un widget</string>
+    <string name="color_black">Noir</string>
+    <string name="color_blue_dark">Bleu foncé</string>
+    <string name="color_blue_deep">Bleu profond</string>
+    <string name="color_blue_light">Bleu clair</string>
+    <string name="color_gray">Gris</string>
+    <string name="color_gray_light">Gris clair</string>
+    <string name="color_green_dark">Vert foncé</string>
+    <string name="color_green_light">Vert clair</string>
+    <string name="color_orange_dark">Orange foncé</string>
+    <string name="color_orange_light">Orange clair</string>
+    <string name="color_purple">Violet</string>
+    <string name="color_red_dark">Rouge foncé</string>
+    <string name="color_red_light">Rouge clair</string>
+    <string name="color_white">Blanc</string>
+    <string name="date_header">Rendu de la date</string>
+    <string name="date_reset">La date à été réinitialisée</string>
+    <string name="date_sentence_mode_title">Mode « phrase »</string>
+    <string name="date_shorten_era_display_title">Abréger l\'ère</string>
+    <string name="date_week_day_display_title">Afficher le jour de la semaine</string>
+    <string name="date_year_display_title">Afficher l\'année</string>
+    <string name="date_year_reference_title">Référence des années</string>
+    <string name="era_ad">ap. J.-C.</string>
+    <string name="era_bc">av. J.-C.</string>
+    <string name="font_color_title">Couleur de la police</string>
+    <string name="font_size_title">Taille de la police</string>
+    <string name="text_copied_to_clipboard">Le texte à été copié dans le presse-papier</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="widget_font_header">Police de caractère du widget</string>
+    <string name="year_reference_anno_domini">"Jésus-Christ "</string>
+    <string name="year_reference_rome_fondation">Fondation de Rome</string>
+</resources>
