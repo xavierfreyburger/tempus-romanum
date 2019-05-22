@@ -87,7 +87,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         eraRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                updateDate();
+                if(!lockTextWatcher) {
+                    updateDate();
+                }
             }
         });
 
@@ -261,6 +263,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if(y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
             yearEditText.setText(String.valueOf(calendar.get(Calendar.YEAR)));
         }
+        if(forceNewDate) {
+            switch (calendar.get(Calendar.ERA)) {
+                case GregorianCalendar.AD:
+                    eraRadioGroup.check(R.id.adRadioButton);
+                    break;
+                case GregorianCalendar.BC:
+                    eraRadioGroup.check(R.id.bcRadioButton);
+                    break;
+
+            }
+        }
         lockTextWatcher = false;
     }
 
@@ -306,12 +319,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        /*
-        if (key.equals("font_size")) {
-            // Update widget
-            updateWidget();
-        }
-        */
         switch (key)
         {
             case "sentence_mode":

@@ -1,15 +1,4 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
-    </string-array>
-
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
-    </string-array>
-
     <!-- Font size arrays -->
     <string-array name="font_size_entries">
         <item>8</item>
@@ -35,20 +24,20 @@
 
     <!-- Font colors arrays -->
     <string-array name="font_color_entries">
-        <item>White</item>
-        <item>Light gray</item>
-        <item>Gray</item>
-        <item>Black</item>
-        <item>Light blue</item>
-        <item>Deep blue</item>
-        <item>Dark blue</item>
-        <item>Light green</item>
-        <item>Dark green</item>
-        <item>Light red</item>
-        <item>Dark red</item>
-        <item>Light orange</item>
-        <item>Dark orange</item>
-        <item>Purple</item>
+        <item>@string/color_white</item>
+        <item>@string/color_gray_light</item>
+        <item>@string/color_gray</item>
+        <item>@string/color_black</item>
+        <item>@string/color_blue_light</item>
+        <item>@string/color_blue_deep</item>
+        <item>@string/color_blue_dark</item>
+        <item>@string/color_green_light</item>
+        <item>@string/color_green_dark</item>
+        <item>@string/color_red_light</item>
+        <item>@string/color_red_dark</item>
+        <item>@string/color_orange_light</item>
+        <item>@string/color_orange_dark</item>
+        <item>@string/color_purple</item>
     </string-array>
 
     <string-array name="font_color_values">
@@ -70,8 +59,8 @@
 
     <!-- Year references arrays -->
     <string-array name="date_year_reference_entries">
-        <item>Anno Domini</item>
-        <item>Rome fondation</item>
+        <item>@string/year_reference_anno_domini</item>
+        <item>@string/year_reference_rome_fondation</item>
     </string-array>
 
     <string-array name="date_year_reference_values">

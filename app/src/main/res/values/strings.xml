@@ -23,6 +23,20 @@
     <string name="font_color_title">Font color</string>
     <string name="saved_font_color">font_color</string>
     <string name="default_font_color">colorWhite</string>
+    <string name="color_white">White</string>
+    <string name="color_gray_light">Light gray</string>
+    <string name="color_gray">Gray</string>
+    <string name="color_black">Black</string>
+    <string name="color_blue_light">Light blue</string>
+    <string name="color_blue_deep">Deep blue</string>
+    <string name="color_blue_dark">Dark blue</string>
+    <string name="color_green_light">Light green</string>
+    <string name="color_green_dark">Dark green</string>
+    <string name="color_red_light">Light red</string>
+    <string name="color_red_dark">Dark red</string>
+    <string name="color_orange_light">Light orange</string>
+    <string name="color_orange_dark">Dark orange</string>
+    <string name="color_purple">Purple</string>
 
     <!-- 2. Date preferences -->
     <string name="date_header">Date preferences</string>
@@ -42,6 +56,8 @@
     <string name="date_year_reference_title">Year reference</string>
     <string name="saved_date_year_reference">year_reference</string>
     <string name="default_date_year_reference">ANNO_DOMINI</string>
+    <string name="year_reference_anno_domini">Anno Domini</string>
+    <string name="year_reference_rome_fondation">Rome fondation</string>
     <!-- 2.2 Shorten era -->
     <string name="date_shorten_era_display_title">Shorten era</string>
     <string name="saved_date_shorten_era_display">shorten_era</string>
