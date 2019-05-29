@@ -90,7 +90,6 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         }
 
         // Calcul de la date en latin
-        // TODO convertir à la nouvelle api
         CharSequence widgetText = Calendarium.tempus(currentDate, sentenceMode, displayWeekDay, yearRef, shortenEra);
 
         // Construct the RemoteViews object
