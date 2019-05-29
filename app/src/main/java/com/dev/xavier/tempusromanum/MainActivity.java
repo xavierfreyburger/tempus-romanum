@@ -229,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             date = c.getTime();
         }
-        // TODO implémenter nouvelles options
         SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
 
         // Options concernant la date

@@ -65,11 +65,11 @@
     <!-- 3. Force latin language
         app:summaryOn="@string/force_latin_on"
         app:summaryOff="@string/force_latin_off" -->
-    <!--PreferenceCategory app:title="@string/force_latin_header">
+    <PreferenceCategory app:title="@string/force_latin_header">
         <SwitchPreferenceCompat
             app:title="@string/force_latin"
             app:key="@string/saved_force_latin"
             app:defaultValue="@string/default_force_latin"
             />
-    </PreferenceCategory-->
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

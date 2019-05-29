@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- options -->
+    <string name="add_widget">Adde fenestram-instrumentum</string> <!-- ajoute une fenetre outil (windows gadget) -->
+    <string name="title_activity_settings">Optiones</string> <!-- options -->
+    <string name="text_copied_to_clipboard">Versus in forcipe chartarum exscriptus est</string> <!-- la ligne de texte a été copiée dans la pince a papier -->
+    <string name="date_reset">Nunc tempus est hodie</string> <!-- Maintenant la date est aujourd'hui-->
+    <string name="era_bc">A.C.N.</string> <!-- ante christum natum -->
+    <string name="era_ad">A.D.</string> <!-- Anno domini -->
+    <string name="widget_font_header">Forma litterae in fenestra-instrumento</string> <!-- la forme des lettres dans la fenetre outil -->
+    <string name="font_size_title">Amplitudo litterarum</string> <!-- taille des lettres -->
+    <string name="font_color_title">Color litterarum</string> <!-- couleur des lettres -->
+    <string name="color_white">Albus</string>
+    <string name="color_gray_light">Clarus canus</string>
+    <string name="color_gray">Canus</string>
+    <string name="color_black">Niger</string>
+    <string name="color_blue_light">Clarus caeruleus</string>
+    <string name="color_blue_deep">Profundus caeruleus</string>
+    <string name="color_blue_dark">Obscurus caeruleus</string>
+    <string name="color_green_light">Clarus viridis</string>
+    <string name="color_green_dark">Obscurus viridis</string>
+    <string name="color_red_light">Clarus ruber</string>
+    <string name="color_red_dark">Obscurus ruber</string>
+    <string name="color_orange_light">Clarus flammeus</string>
+    <string name="color_orange_dark">Obscurus flammeus</string>
+    <string name="color_purple">Purpureus</string>
+    <string name="date_header">Forma temporis</string> <!-- forme de la date -->
+    <string name="date_sentence_mode_title">Ut sententia</string> <!-- comme une phrase -->
+    <string name="date_week_day_display_title">Scribe momimem diei</string> <!-- écrit le nom du jour -->
+    <string name="date_year_display_title">Scribe annum</string> <!-- écrit l'année -->
+    <string name="date_year_reference_title">Initium calendarii</string> <!-- début du calendrier -->
+    <string name="year_reference_anno_domini">Anno Domini</string> <!-- année du ségneur -->
+    <string name="year_reference_rome_fondation">Ab Urbe condita</string> <!-- depuis la fondation de "La Ville" -->
+    <string name="date_shorten_era_display_title">Brevis era</string>
+    <string name="force_latin">Latine</string>
+    <string name="force_latin_header">Lingua</string>
+    <string name="force_latin_off">Systema</string>
+    <string name="force_latin_on">Latine</string>
+    <string name="action_settings">Optiones</string> <!-- Ere courte -->
+</resources>
