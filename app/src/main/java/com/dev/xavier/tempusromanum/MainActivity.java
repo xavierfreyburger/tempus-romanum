@@ -28,7 +28,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 /**
  * Copyright 2019 Xavier Freyburger
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onCreate(Bundle savedInstanceState) {
 
         // Mise à jour de la locale
-        updateLanguage();
+        LocaleHelper.updateLanguage(this);
 
         super.onCreate(savedInstanceState);
 
@@ -284,26 +283,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         lockTextWatcher = false;
     }
 
-    private void updateLanguage() {
-        SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
-        final boolean forcedLatin = pref.getBoolean(getString(R.string.saved_force_latin), Boolean.valueOf(getString(R.string.default_force_latin)));
-        final String currentLanguage = Locale.getDefault().getLanguage();
-
-        if(forcedLatin) {
-            final String latinLanguage = getString(R.string.latin_locale_code);
-            if(!currentLanguage.equals(latinLanguage)) {
-                // Forcer le latin comme langue de l'application
-                LocaleHelper.setLocale(MainActivity.this, latinLanguage);
-            }
-        } else {
-            final String systemLanguage = LocaleHelper.getSystemLocale().getLanguage();
-            if(!currentLanguage.equals(systemLanguage)) {
-                // Remettre la langue sélectionnée dans les paramètres système
-                LocaleHelper.setLocale(this, systemLanguage);
-            }
-        }
-    }
-
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -359,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 updateWidget();
                 break;
             case "force_latin":
-                updateLanguage();
+                LocaleHelper.updateLanguage(this);
                 // Reload settings view
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);

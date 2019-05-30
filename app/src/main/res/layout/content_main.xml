@@ -40,19 +40,21 @@
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" tools:targetApi="o" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="o" />
 
     <EditText
         android:id="@+id/monthEditText"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" tools:targetApi="o" />
+        tools:targetApi="o" />
 
     <TextView
         android:id="@+id/textView"
@@ -71,12 +73,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/eraRadioGroup"
         app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" tools:targetApi="o"/>
+        tools:targetApi="o" />
 
     <TextView
         android:id="@+id/textView2"

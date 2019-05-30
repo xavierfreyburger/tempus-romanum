@@ -1,61 +1,60 @@
 package com.dev.xavier.tempusromanum;
 
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 
 import java.util.Locale;
 
 /**
- * Created by devdeeds.com on 18/4/17.
- * by Jayakrishnan P.M
+ * Copyright 2019 Xavier Freyburger
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
-
 public class LocaleHelper {
 
-    public static Context setLocale(Context context, String language) {
+    public static void updateLanguage(Context context) {
+        SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        final boolean forcedLatin = pref.getBoolean(context.getString(R.string.saved_force_latin), Boolean.valueOf(context.getString(R.string.default_force_latin)));
+        final String currentLanguage = Locale.getDefault().getLanguage();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return updateResources(context, language);
-        }
-
-        return updateResourcesLegacy(context, language);
-    }
-
-    public static Locale getSystemLocale() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Resources.getSystem().getConfiguration().getLocales().get(0);
+        if(forcedLatin) {
+            final String latinLanguage = context.getString(R.string.latin_locale_code);
+            if(!currentLanguage.equals(latinLanguage)) {
+                // Forcer le latin comme langue de l'application
+                LocaleHelper.updateResources(context,latinLanguage);
+            }
         } else {
-            //noinspection deprecation
-            return Resources.getSystem().getConfiguration().locale;
+            final String systemLanguage = LocaleHelper.getSystemLocale().getLanguage();
+            if(!currentLanguage.equals(systemLanguage)) {
+                // Remettre la langue sélectionnée dans les paramètres système
+                LocaleHelper.updateResources(context, systemLanguage);
+            }
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
-    private static Context updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Configuration configuration = context.getResources().getConfiguration();
-        configuration.setLocale(locale);
-
-        return context.createConfigurationContext(configuration);
+    private static Locale getSystemLocale() {
+        return Resources.getSystem().getConfiguration().locale;
     }
 
-    @SuppressWarnings("deprecation")
-    private static Context updateResourcesLegacy(Context context, String language) {
+    private static void updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
 
-        Resources resources = context.getResources();
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-
-        return context;
+        Resources res = context.getResources();
+        Configuration config = new Configuration(res.getConfiguration());
+        config.setLocale(locale);
+        res.updateConfiguration(config, res.getDisplayMetrics());
     }
 }

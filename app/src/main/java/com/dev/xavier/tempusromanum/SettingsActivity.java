@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LocaleHelper.updateLanguage(this);
         super.onCreate(savedInstanceState);
         setTitle(R.string.title_activity_settings);
         setContentView(R.layout.settings_activity);
