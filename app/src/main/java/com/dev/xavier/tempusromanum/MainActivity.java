@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,10 +60,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+
         // Mise à jour de la locale
         LocaleHelper.updateLanguage(this);
 
-        super.onCreate(savedInstanceState);
+        // Lors du lancement remise à zéro des valeurs sauvegardées
+        // resetSavedData();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -74,9 +78,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         yearEditText = findViewById(R.id.yearEditText);
         eraRadioGroup = findViewById(R.id.eraRadioGroup);
 
+        /* Restauration des valeurs sauvegardées
         if(savedInstanceState != null) {
             restoreSavedInstaceState(savedInstanceState);
-        }
+        }*/
 
         // sélection par défaut de êre moderne
         if(eraRadioGroup.getCheckedRadioButtonId() == -1)
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         updateDate();
 
+        // Mise en place de l'écoute sur modification de la date par l'utilisateur
         dayEditText.addTextChangedListener(this);
         monthEditText.addTextChangedListener(this);
         yearEditText.addTextChangedListener(this);
@@ -95,6 +101,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 if(!lockTextWatcher) {
                     updateDate();
                 }
+            }
+        });
+
+        // Mise en place du dialogue de choix du jour
+        dayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new ChooseDayDialogFragment();
+                newFragment.show(getSupportFragmentManager(), "dayOfMonth");
+            }
+        });
+
+        // Mise en place du dialogue de choix du mois
+        monthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new ChooseMonthDialogFragment();
+                newFragment.show(getSupportFragmentManager(), "month");
             }
         });
 
@@ -384,5 +408,88 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if(!lockTextWatcher) {
             updateDate();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putString("day", dayEditText.getText().toString());
+        ed.putString("month", monthEditText.getText().toString());
+        ed.putString("year", yearEditText.getText().toString());
+        ed.putInt("era", eraRadioGroup.getCheckedRadioButtonId());
+        ed.putLong("dateLastChange", new Date().getTime());
+        ed.commit();
+    }
+
+    private void resetSavedData() {
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.remove("day");
+        ed.remove("month");
+        ed.remove("year");
+        ed.remove("era");
+        ed.putLong("dateLastChange", new Date().getTime());
+        ed.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+
+        Long dateLastChange = mPrefs.getLong("dateLastChange", 0);
+
+        // Si les données on plus d'un jour ==> reset
+        if(dateLastChange != 0)
+        {
+            Calendar now = Calendar.getInstance();
+            Date previousDate = new Date();
+            previousDate.setTime(dateLastChange);
+            Calendar previously = Calendar.getInstance();
+            previously.setTime(previousDate);
+            // TODO à modifier, un jour c'est long
+            previously.add(Calendar.MINUTE, 15);
+            if(previously.before(now)) {
+                resetSavedData();
+                return;
+            }
+        }
+
+        String day = mPrefs.getString("day", null);
+        if(day != null) {
+            dayEditText.setText(day);
+        }
+
+        String month = mPrefs.getString("month", null);
+        if(month != null) {
+            monthEditText.setText(month);
+        }
+
+        String year = mPrefs.getString("year", null);
+        if(year != null) {
+            yearEditText.setText(year);
+        }
+
+        Integer era = mPrefs.getInt("era", 0);
+        if(era != 0) {
+            eraRadioGroup.check(era);
+        }
+    }
+
+
+    /*
+     * Getters
+     */
+
+    public EditText getDayEditText() {
+        return dayEditText;
+    }
+
+    public EditText getMonthEditText() {
+        return monthEditText;
     }
 }

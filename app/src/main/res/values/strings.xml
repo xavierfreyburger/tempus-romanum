@@ -71,4 +71,6 @@
     <string name="force_latin_off">System</string>
     <string name="saved_force_latin" translatable="false">force_latin</string>
     <string name="default_force_latin" translatable="false">false</string>
+    <string name="dialog_day_of_month">Day</string>
+    <string name="dialog_month">Month</string>
 </resources>

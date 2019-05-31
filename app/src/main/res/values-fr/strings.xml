@@ -36,4 +36,6 @@
     <string name="force_latin_off">Système</string>
     <string name="force_latin_on">Latin</string>
     <string name="force_latin">Latin</string>
+    <string name="dialog_day_of_month">Jour</string>
+    <string name="dialog_month">Mois</string>
 </resources>

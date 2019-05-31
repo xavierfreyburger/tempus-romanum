@@ -36,5 +36,7 @@
     <string name="force_latin_header">Lingua</string>
     <string name="force_latin_off">Systema</string>
     <string name="force_latin_on">Latine</string>
-    <string name="action_settings">Optiones</string> <!-- Ere courte -->
+    <string name="action_settings">Optiones</string>
+    <string name="dialog_day_of_month">Dies</string>
+    <string name="dialog_month">Mensis</string> <!-- Ere courte -->
 </resources>
