@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -370,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
+    /*
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         monthEditText.setText(outState.getString("monthEditText"));
         yearEditText.setText(outState.getString("yearEditText"));
         eraRadioGroup.check(outState.getInt("eraRadioGroup"));
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
