@@ -1,5 +1,6 @@
 package com.dev.xavier.tempusromanum;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -27,8 +28,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LocaleHelper.updateLanguage(this);
-
         setTitle(R.string.title_activity_settings);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
@@ -46,5 +45,11 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Met à jour la locale
+        super.attachBaseContext(LocaleHelper.updateLanguage(base));
     }
 }

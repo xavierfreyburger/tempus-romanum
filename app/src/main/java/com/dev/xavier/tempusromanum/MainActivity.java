@@ -51,21 +51,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private EditText monthEditText;
     private EditText yearEditText;
     private RadioGroup eraRadioGroup;
+    private boolean customDate = false;
     private boolean lockTextWatcher = false;
-
-    private Date date;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        // Mise à jour de la locale
-        LocaleHelper.updateLanguage(this);
-
-        // Lors du lancement remise à zéro des valeurs sauvegardées
-        // resetSavedData();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -77,12 +69,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         yearEditText = findViewById(R.id.yearEditText);
         eraRadioGroup = findViewById(R.id.eraRadioGroup);
 
-        /* Restauration des valeurs sauvegardées
-        if(savedInstanceState != null) {
-            restoreSavedInstaceState(savedInstanceState);
-        }*/
-
-        // sélection par défaut de êre moderne
+        // Sélection par défaut de êre moderne
         if(eraRadioGroup.getCheckedRadioButtonId() == -1)
         {
             eraRadioGroup.check(R.id.adRadioButton);
@@ -121,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
         });
 
-        // Bouton copier
+        // Bouton copier dans le presse-papier
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Force today date
+                // Forcer la date du jour
                 updateDate(true);
                 Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -150,6 +137,129 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setupSharedPreferences();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            // Open settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        switch (key)
+        {
+            case "sentence_mode":
+            case "week_day_display":
+            case "year_display":
+            case "year_reference":
+            case "shorten_era":
+                updateDate();
+            case "font_size":
+            case "font_color":
+                updateWidget();
+                break;
+            case "force_latin":
+                // Recharger la vue des paramètres pour qu'elle soit affichée en latin
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if(!lockTextWatcher) {
+            updateDate();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putBoolean("customDate", customDate);
+        if(customDate) {
+            ed.putString("day", dayEditText.getText().toString());
+            ed.putString("month", monthEditText.getText().toString());
+            ed.putString("year", yearEditText.getText().toString());
+            ed.putInt("era", eraRadioGroup.getCheckedRadioButtonId());
+        }
+        ed.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        customDate = mPrefs.getBoolean("customDate", false);
+
+        // Si une date à été entrée par l'utilisateur ==> restoration
+        if(customDate) {
+
+            String day = mPrefs.getString("day", null);
+            if (day != null) {
+                dayEditText.setText(day);
+            }
+
+            String month = mPrefs.getString("month", null);
+            if (month != null) {
+                monthEditText.setText(month);
+            }
+
+            String year = mPrefs.getString("year", null);
+            if (year != null) {
+                yearEditText.setText(year);
+            }
+
+            int era = mPrefs.getInt("era", 0);
+            if (era != 0) {
+                eraRadioGroup.check(era);
+            }
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Met à jour la locale
+        super.attachBaseContext(LocaleHelper.updateLanguage(base));
+    }
+
     private void updateDate()
     {
         updateDate(false);
@@ -157,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void updateDate(boolean forceNewDate)
     {
+        final Date date;
+
+        customDate = !forceNewDate;
+
         Integer d = null;
         Integer m = null;
         Integer y = null;
@@ -319,167 +433,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            // Open settings activity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        switch (key)
-        {
-            case "sentence_mode":
-            case "week_day_display":
-            case "year_display":
-            case "year_reference":
-            case "shorten_era":
-                updateDate();
-            case "font_size":
-            case "font_color":
-                updateWidget();
-                break;
-            case "force_latin":
-                LocaleHelper.updateLanguage(this);
-                // Reload settings view
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
-
-    /*
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("outputDate", outputDate.getText().toString());
-        outState.putString("dayEditText", dayEditText.getText().toString());
-        outState.putString("monthEditText", monthEditText.getText().toString());
-        outState.putString("yearEditText", yearEditText.getText().toString());
-        outState.putInt("eraRadioGroup", eraRadioGroup.getCheckedRadioButtonId());
-    }
-
-    private void restoreSavedInstaceState(@NonNull Bundle outState)
-    {
-        outputDate.setText(outState.getString("outputDate"));
-        dayEditText.setText(outState.getString("dayEditText"));
-        monthEditText.setText(outState.getString("monthEditText"));
-        yearEditText.setText(outState.getString("yearEditText"));
-        eraRadioGroup.check(outState.getInt("eraRadioGroup"));
-    }*/
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if(!lockTextWatcher) {
-            updateDate();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putString("day", dayEditText.getText().toString());
-        ed.putString("month", monthEditText.getText().toString());
-        ed.putString("year", yearEditText.getText().toString());
-        ed.putInt("era", eraRadioGroup.getCheckedRadioButtonId());
-        ed.putLong("dateLastChange", new Date().getTime());
-        ed.commit();
-    }
-
-    private void resetSavedData() {
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = mPrefs.edit();
-        ed.remove("day");
-        ed.remove("month");
-        ed.remove("year");
-        ed.remove("era");
-        ed.putLong("dateLastChange", new Date().getTime());
-        ed.commit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-
-        Long dateLastChange = mPrefs.getLong("dateLastChange", 0);
-
-        // Si les données on plus d'un jour ==> reset
-        if(dateLastChange != 0)
-        {
-            Calendar now = Calendar.getInstance();
-            Date previousDate = new Date();
-            previousDate.setTime(dateLastChange);
-            Calendar previously = Calendar.getInstance();
-            previously.setTime(previousDate);
-            // TODO à modifier, un jour c'est long
-            previously.add(Calendar.MINUTE, 15);
-            if(previously.before(now)) {
-                resetSavedData();
-                return;
-            }
-        }
-
-        String day = mPrefs.getString("day", null);
-        if(day != null) {
-            dayEditText.setText(day);
-        }
-
-        String month = mPrefs.getString("month", null);
-        if(month != null) {
-            monthEditText.setText(month);
-        }
-
-        String year = mPrefs.getString("year", null);
-        if(year != null) {
-            yearEditText.setText(year);
-        }
-
-        Integer era = mPrefs.getInt("era", 0);
-        if(era != 0) {
-            eraRadioGroup.check(era);
-        }
-    }
-
 
     /*
      * Getters
