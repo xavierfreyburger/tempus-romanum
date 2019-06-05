@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             eraRadioGroup.check(R.id.adRadioButton);
         }
 
-        updateDate();
-
         // Mise en place de l'écoute sur modification de la date par l'utilisateur
         dayEditText.addTextChangedListener(this);
         monthEditText.addTextChangedListener(this);
@@ -85,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(!lockTextWatcher) {
+                    customDate = true;
                     updateDate();
                 }
             }
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onClick(View view) {
                 // Forcer la date du jour
+                customDate = false;
                 updateDate(true);
                 Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             case "year_display":
             case "year_reference":
             case "shorten_era":
-                updateDate();
             case "font_size":
             case "font_color":
                 updateWidget();
@@ -202,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void afterTextChanged(Editable s) {
         if(!lockTextWatcher) {
+            customDate = true;
             updateDate();
         }
     }
@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Si une date à été entrée par l'utilisateur ==> restoration
         if(customDate) {
 
+            lockTextWatcher = true;
+
             String day = mPrefs.getString("day", null);
             if (day != null) {
                 dayEditText.setText(day);
@@ -251,7 +253,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             if (era != 0) {
                 eraRadioGroup.check(era);
             }
+
+            lockTextWatcher = false;
         }
+        updateDate();
     }
 
     @Override
@@ -268,8 +273,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void updateDate(boolean forceNewDate)
     {
         final Date date;
-
-        customDate = !forceNewDate;
 
         Integer d = null;
         Integer m = null;
@@ -406,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if(y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
             yearEditText.setText(String.valueOf(calendar.get(Calendar.YEAR)));
         }
+
         if(forceNewDate) {
             switch (calendar.get(Calendar.ERA)) {
                 case GregorianCalendar.AD:
