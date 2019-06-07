@@ -226,7 +226,7 @@ public class Calendarium
         throw new IllegalArgumentException (String.valueOf(p_arg));
     }
 
-    private static String romanusNumerus(int p_numerus)
+    public static String romanusNumerus(int p_numerus)
     {
         StringBuilder sb = new StringBuilder();
         int times = 0;

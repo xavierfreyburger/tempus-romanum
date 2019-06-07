@@ -28,15 +28,34 @@ public class ChooseMonthDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        //String[] values = getResources().getStringArray(R.array.month_values);
-        final int month = Integer.valueOf(((MainActivity)getActivity()).getMonthEditText().getText().toString());
+        final String[] values = getResources().getStringArray(R.array.months);
+        final String monthtxt = ((MainActivity)getActivity()).getMonthEditText().getText().toString();
+
+        // Récupération de la valeur du mois actuellement sélectionné
+        int month = 1;
+
+        if(((MainActivity)getActivity()).isRomanNumber()) {
+            // En romain
+            for(int i = 1 ; i <= values.length ; i++) {
+                if(values[i - 1].equals(monthtxt)) {
+                    month = i;
+                    break;
+                }
+            }
+        } else {
+            month = Integer.valueOf(((MainActivity) getActivity()).getMonthEditText().getText().toString());
+        }
+
+        // Création du dialogue
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.dialog_month))
-                .setSingleChoiceItems(R.array.month_values, month - 1, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.months, month - 1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Sélectionner le mois correspondant
-                        ((MainActivity)getActivity()).getMonthEditText().setText(String.valueOf(which + 1));
+                        // TODO suppr
+                        //  ((MainActivity)getActivity()).getMonthEditText().setText(String.valueOf(which + 1));
+                        ((MainActivity)getActivity()).getMonthEditText().setText(values[which]);
                         dismiss();
                     }
                 })

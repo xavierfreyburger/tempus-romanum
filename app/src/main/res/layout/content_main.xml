@@ -9,13 +9,90 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <EditText
+        android:id="@+id/dayEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:autofillHints=""
+        android:minEms="2"
+        android:focusable="false"
+        android:inputType="none|textNoSuggestions"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="o" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="21dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="35dp"
+        android:text="@string/date_separator"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/dayEditText"
+        app:layout_constraintEnd_toStartOf="@+id/monthEditText"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/monthEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:autofillHints=""
+        android:minEms="2"
+        android:focusable="false"
+        android:inputType="none|textNoSuggestions"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="o" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="21dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="35dp"
+        android:text="@string/date_separator"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/monthEditText"
+        app:layout_constraintEnd_toStartOf="@+id/yearEditText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/yearEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="8dp"
+        android:minEms="3"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/eraRadioGroup"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:targetApi="o" />
+
     <RadioGroup
         android:id="@+id/eraRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/yearEditText"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
@@ -30,70 +107,6 @@
             android:layout_height="32dp"
             android:text="@string/era_ad" />
     </RadioGroup>
-
-    <EditText
-        android:id="@+id/dayEditText"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="none"
-        android:focusable="false"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
-
-    <EditText
-        android:id="@+id/monthEditText"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="none"
-        android:focusable="false"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="21dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/date_separator"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/monthEditText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/yearEditText"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="32dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="number"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/eraRadioGroup"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="21dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/date_separator"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/yearEditText"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/outputDate"

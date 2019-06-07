@@ -46,6 +46,10 @@ class LocaleHelper {
         return context;
     }
 
+    public static String getCurrentLocale() {
+        return getSystemLocale().getDefault().getLanguage();
+    }
+
     private static Locale getSystemLocale() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return getSystemLocaleNew();

@@ -9,13 +9,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private RadioGroup eraRadioGroup;
     private boolean customDate = false;
     private boolean lockTextWatcher = false;
+    private boolean romanNumber = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,6 +230,26 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onResume() {
         super.onResume();
 
+        // Activer/Désactiver l'affichage du clavier lors de l'edition des années
+        if(romanNumber) {
+            yearEditText.setInputType(InputType.TYPE_NULL | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            yearEditText.setFocusable(false);
+            yearEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(romanNumber) {
+                        // Do something !!
+                        Toast.makeText(getApplicationContext(), "Affichage d'un picker année en romain !!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            yearEditText.setFocusable(true);
+            yearEditText.setOnClickListener(null);
+        }
+
+
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
         customDate = mPrefs.getBoolean("customDate", false);
 
@@ -234,20 +258,34 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             lockTextWatcher = true;
 
-            String day = mPrefs.getString("day", null);
-            if (day != null) {
+            /*String day = mPrefs.getString("day", null);
+            if (day != null && day.length() > 0) {
+                if(romanNumber)
+                {
+                    if(!NumberHelper.isRoman(dayEditText.getText().charAt(0))) {
+                        day = Calendarium.romanusNumerus(Integer.valueOf(day));
+                    }
+                } else {
+                    if(!NumberHelper.isDecimal(dayEditText.getText().charAt(0))) {
+                        day = String.valueOf(NumberHelper.decimal(dayEditText.getText().toString()));
+                    }
+                }
                 dayEditText.setText(day);
-            }
+            }*/
+            prefNumberValueRetriever(mPrefs, "day", null, dayEditText);
+            prefNumberValueRetriever(mPrefs, "month", null, monthEditText);
+            prefNumberValueRetriever(mPrefs, "year", null, yearEditText);
 
-            String month = mPrefs.getString("month", null);
+
+            /*String month = mPrefs.getString("month", null);
             if (month != null) {
                 monthEditText.setText(month);
-            }
+            }*/
 
-            String year = mPrefs.getString("year", null);
+            /*String year = mPrefs.getString("year", null);
             if (year != null) {
                 yearEditText.setText(year);
-            }
+            }*/
 
             int era = mPrefs.getInt("era", 0);
             if (era != 0) {
@@ -263,6 +301,26 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void attachBaseContext(Context base) {
         // Met à jour la locale
         super.attachBaseContext(LocaleHelper.updateLanguage(base));
+        // Mettre à jour l'info de l'affichage en mode romain ou decimal
+        romanNumber = LocaleHelper.getCurrentLocale().equals(getString(R.string.latin_locale_code));
+    }
+
+    private void prefNumberValueRetriever(SharedPreferences pref, String key, String defaultValue, EditText editText) {
+        String value = pref.getString(key, defaultValue);
+
+        if (value != null && value.length() > 0) {
+            if(romanNumber)
+            {
+                if(!NumberHelper.isRoman(value.charAt(0))) {
+                    value = Calendarium.romanusNumerus(Integer.valueOf(value));
+                }
+            } else {
+                if(!NumberHelper.isDecimal(value.charAt(0))) {
+                    value = String.valueOf(NumberHelper.decimal(value));
+                }
+            }
+            editText.setText(value);
+        }
     }
 
     private void updateDate()
@@ -283,9 +341,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         boolean updateYear = false;
 
         if(!forceNewDate) {
-            d = dayEditText.getText() == null || dayEditText.getText().length() == 0 ? null : Integer.valueOf(dayEditText.getText().toString());
-            m = monthEditText.getText() == null || monthEditText.getText().length() == 0 ? null : Integer.valueOf(monthEditText.getText().toString());
-            y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : Integer.valueOf(yearEditText.getText().toString());
+            d = dayEditText.getText() == null || dayEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(dayEditText.getText().toString()) : Integer.valueOf(dayEditText.getText().toString());
+            m = monthEditText.getText() == null || monthEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(monthEditText.getText().toString()) : Integer.valueOf(monthEditText.getText().toString());
+            y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
 
 
             // Contrôle de la validité du jour saisi
@@ -329,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 if (y <= 0) {
                     y = null;
                 } else {
-                    newy = y % 10000;
+                    newy = y % 4000;
                     if (newy == 0) {
                         newy = 1;
                     }
@@ -395,18 +453,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Mise à jour du champ texte
         outputDate.setText(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
+        // TODO à supprimer
+        Log.d("date", date.toGMTString());
 
         // Si la date n'est pas la même que celle renseignée par l'utilisateur, mise à jour des champs de saisies
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         lockTextWatcher = true;
         if(d == null || updateDay || d != calendar.get(Calendar.DAY_OF_MONTH)) {
-            dayEditText.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+            dayEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.DAY_OF_MONTH)) : String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
         }
         if(m == null || updateMonth || m != (calendar.get(Calendar.MONTH)+1)) {
-            monthEditText.setText(String.valueOf(calendar.get(Calendar.MONTH) + 1));
+            monthEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.MONTH) + 1) : String.valueOf(calendar.get(Calendar.MONTH) + 1));
         }
         if(y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
+            // TODO tester romanNumber
             yearEditText.setText(String.valueOf(calendar.get(Calendar.YEAR)));
         }
 
@@ -448,5 +509,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     public EditText getMonthEditText() {
         return monthEditText;
+    }
+
+    public boolean isRomanNumber() {
+        return romanNumber;
     }
 }
