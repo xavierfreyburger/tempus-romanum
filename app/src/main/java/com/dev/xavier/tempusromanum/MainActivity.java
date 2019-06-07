@@ -258,34 +258,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             lockTextWatcher = true;
 
-            /*String day = mPrefs.getString("day", null);
-            if (day != null && day.length() > 0) {
-                if(romanNumber)
-                {
-                    if(!NumberHelper.isRoman(dayEditText.getText().charAt(0))) {
-                        day = Calendarium.romanusNumerus(Integer.valueOf(day));
-                    }
-                } else {
-                    if(!NumberHelper.isDecimal(dayEditText.getText().charAt(0))) {
-                        day = String.valueOf(NumberHelper.decimal(dayEditText.getText().toString()));
-                    }
-                }
-                dayEditText.setText(day);
-            }*/
-            prefNumberValueRetriever(mPrefs, "day", null, dayEditText);
-            prefNumberValueRetriever(mPrefs, "month", null, monthEditText);
-            prefNumberValueRetriever(mPrefs, "year", null, yearEditText);
-
-
-            /*String month = mPrefs.getString("month", null);
-            if (month != null) {
-                monthEditText.setText(month);
-            }*/
-
-            /*String year = mPrefs.getString("year", null);
-            if (year != null) {
-                yearEditText.setText(year);
-            }*/
+            prefNumberValueRetriever(mPrefs, "day", dayEditText);
+            prefNumberValueRetriever(mPrefs, "month", monthEditText);
+            prefNumberValueRetriever(mPrefs, "year", yearEditText);
 
             int era = mPrefs.getInt("era", 0);
             if (era != 0) {
@@ -305,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         romanNumber = LocaleHelper.getCurrentLocale().equals(getString(R.string.latin_locale_code));
     }
 
-    private void prefNumberValueRetriever(SharedPreferences pref, String key, String defaultValue, EditText editText) {
-        String value = pref.getString(key, defaultValue);
+    private void prefNumberValueRetriever(SharedPreferences pref, String key,  EditText editText) {
+        String value = pref.getString(key, null);
 
         if (value != null && value.length() > 0) {
             if(romanNumber)
@@ -346,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
 
 
-            // Contrôle de la validité du jour saisi
+            // Contrôle de la validité du jour saisi max 31
             if (d != null) {
                 int newd = d;
                 if (d <= 0) {
@@ -364,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 }
             }
 
-            // Contôle du mois saisi
+            // Contôle du mois saisi max 12
             if (m != null) {
                 int newm = m;
                 if (m <= 0) {
@@ -381,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 }
             }
 
-            // Contrôle de l'année saisie
+            // Contrôle de l'année saisie max 3999
             if (y != null) {
                 int newy = y;
                 if (y <= 0) {
@@ -414,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             // Calcul de la date
             Calendar c = Calendar.getInstance();
             c.set(Calendar.DAY_OF_MONTH, d);
-            c.set(Calendar.MONTH, m-1);
+            c.set(Calendar.MONTH, m - 1);
             c.set(Calendar.YEAR, y);
             switch (eraRadioGroup.getCheckedRadioButtonId()) {
                 case R.id.adRadioButton:
@@ -467,8 +442,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             monthEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.MONTH) + 1) : String.valueOf(calendar.get(Calendar.MONTH) + 1));
         }
         if(y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
-            // TODO tester romanNumber
-            yearEditText.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+            yearEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.YEAR)) : String.valueOf(calendar.get(Calendar.YEAR)));
         }
 
         if(forceNewDate) {

@@ -53,8 +53,6 @@ public class ChooseMonthDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Sélectionner le mois correspondant
-                        // TODO suppr
-                        //  ((MainActivity)getActivity()).getMonthEditText().setText(String.valueOf(which + 1));
                         ((MainActivity)getActivity()).getMonthEditText().setText(values[which]);
                         dismiss();
                     }
