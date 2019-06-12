@@ -45,6 +45,7 @@
     <string name="num_29">29</string>
     <string name="num_30">30</string>
     <string name="num_31">31</string>
+    <string name="num_36">36</string>
 
     <!-- Preference Titles -->
     <string name="preference_file_key" translatable="false">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>

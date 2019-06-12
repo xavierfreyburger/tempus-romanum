@@ -10,118 +10,115 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <EditText
-        android:id="@+id/dayEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="25dp"
-        android:autofillHints=""
-        android:minEms="2"
-        android:focusable="false"
-        android:inputType="none|textNoSuggestions"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="21dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/date_separator"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/dayEditText"
-        app:layout_constraintEnd_toStartOf="@+id/monthEditText"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="parent" />
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="right"
+            android:paddingBottom="16dp"
+            android:scrollbarStyle="outsideInset">
 
-    <EditText
-        android:id="@+id/monthEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:autofillHints=""
-        android:minEms="2"
-        android:focusable="false"
-        android:inputType="none|textNoSuggestions"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="21dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/date_separator"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/monthEditText"
-        app:layout_constraintEnd_toStartOf="@+id/yearEditText"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/yearEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="8dp"
-        android:minEms="3"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/eraRadioGroup"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:targetApi="o" />
+                <EditText
+                    android:id="@+id/dayEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="25dp"
+                    android:autofillHints=""
+                    android:focusable="false"
+                    android:inputType="none|textNoSuggestions"
+                    android:minEms="2"
+                    android:textAlignment="center"
+                    tools:targetApi="o" />
 
-    <RadioGroup
-        android:id="@+id/eraRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/yearEditText"
-        app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="21dp"
+                    android:layout_height="33dp"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/date_separator"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
 
-        <RadioButton
-            android:id="@+id/bcRadioButton"
+                <EditText
+                    android:id="@+id/monthEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:autofillHints=""
+                    android:focusable="false"
+                    android:inputType="none|textNoSuggestions"
+                    android:minEms="2"
+                    android:textAlignment="center"
+                    tools:targetApi="o" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="21dp"
+                    android:layout_height="33dp"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/date_separator"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/yearEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:minEms="3"
+                    android:textAlignment="center"
+                    tools:targetApi="o" />
+
+                <RadioGroup
+                    android:id="@+id/eraRadioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="16dp">
+
+                    <RadioButton
+                        android:id="@+id/bcRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="@string/era_bc" />
+
+                    <RadioButton
+                        android:id="@+id/adRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="@string/era_ad" />
+                </RadioGroup>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/outputDate"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:text="@string/era_bc" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="serif"
+            android:text="@string/appwidget_text"
+            android:textSize="18sp"
+            android:typeface="serif" />
 
-        <RadioButton
-            android:id="@+id/adRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:text="@string/era_ad" />
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/outputDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="serif"
-        android:text="@string/appwidget_text"
-        android:textSize="18sp"
-        android:typeface="serif"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eraRadioGroup" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

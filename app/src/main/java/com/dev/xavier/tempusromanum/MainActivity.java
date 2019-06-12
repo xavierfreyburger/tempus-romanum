@@ -321,6 +321,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         boolean updateMonth = false;
         boolean updateYear = false;
 
+        yearEditText.setError(null);
+
         if(!forceNewDate) {
             d = dayEditText.getText() == null || dayEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(dayEditText.getText().toString()) : Integer.valueOf(dayEditText.getText().toString());
             m = monthEditText.getText() == null || monthEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(monthEditText.getText().toString()) : Integer.valueOf(monthEditText.getText().toString());

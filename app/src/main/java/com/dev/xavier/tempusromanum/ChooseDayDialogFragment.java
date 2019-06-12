@@ -63,6 +63,7 @@ public class ChooseDayDialogFragment extends DialogFragment {
                 // Fermer le dialogue sans rien changer
             }
         });
+
         return builder.create();
     }
 }
