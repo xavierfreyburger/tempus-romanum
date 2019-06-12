@@ -69,5 +69,6 @@
     <string name="num_6">VI</string>
     <string name="num_7">VII</string>
     <string name="num_8">VIII</string>
-    <string name="num_9">IX</string> <!-- Ere courte -->
+    <string name="num_9">IX</string>
+    <string name="number_error">Numerus pravus est</string> <!-- Ere courte -->
 </resources>

@@ -1,6 +1,7 @@
 package com.dev.xavier.tempusromanum;
 
-import android.util.Log;
+import android.text.InputFilter;
+import android.text.Spanned;
 
 /**
  * Copyright 2019 Xavier Freyburger
@@ -17,37 +18,80 @@ import android.util.Log;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-public class NumberHelper {
+class NumberHelper {
+    private static final String[][] romain = {{"MMM", "MM", "M"}, {"CM", "DCCCC", "DCCC", "DCC", "DC", "D", "CD", "CCCC", "CCC", "CC", "C"},
+            {"XC", "LXXXX", "LXXX", "LXX", "LX", "L", "XL", "XXXX", "XXX", "XX", "X"}, {"IX", "VIIII", "VIII", "VII", "VI", "V", "IIII", "IV", "III", "II", "I"}};
+    private static final int[][] decimal = {{3000, 2000, 1000}, {900, 900, 800, 700, 600, 500, 400, 400, 300, 200, 100},
+            {90, 90, 80, 70, 60, 50, 40, 40, 30, 20, 10}, {9, 9, 8, 7, 6, 5, 4, 4, 3, 2, 1}};
 
-    private static final String[] romains = new String[] { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-    private static final int[] decimaux = new int[] { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
-
-    public static int decimal(String nombreRomain) throws NumberFormatException
+    static InputFilter romanNumeraFilter = new InputFilter()
     {
-        StringBuilder sb = new StringBuilder(nombreRomain);
-        int decimal = 0;
-
-        for(int i = 0; i < romains.length; i++)
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
         {
-            if(sb.length() < romains[i].length())
-                continue;
-
-            while(sb.length() > 0 && sb.substring(0, romains[i].length()).equals(romains[i]))
+            for (int i = start; i < end; i++)
             {
-                decimal += decimaux[i];
-                sb.delete(0, romains[i].length());
+                final char ch = source.charAt(i);
+                // only Roman numeral are allowed
+                if(ch == '\n') {
+                    return null;
+                } else if( !isRoman(ch))
+                {
+                    if(source instanceof Spanned) {
+                        StringBuilder sb = new StringBuilder(source);
+                        for (int j = sb.length() - 1; j >= 0; j--) {
+                            if (!isRoman(sb.charAt(j))) {
+                                sb.deleteCharAt(j);
+                            }
+                        }
+                        return sb.toString();
+                    }
+                    else {
+                        return "";
+                    }
+                }
+            }
+
+            return null;
+        }
+    };
+
+
+    static Integer decimal(String nombreRomain) throws NumberFormatException
+    {
+        if(nombreRomain == null || nombreRomain.length() == 0) {
+            return null;
+        }
+        int value = 0;
+        StringBuilder sb = new StringBuilder(nombreRomain);
+
+        for(int i = 0 ; i < romain.length ; i++) {
+            if(sb.length() == 0) {
+                return value;
+            }
+            for(int j = 0 ; j < romain[i].length ; j++) {
+
+                final String rom = romain[i][j];
+
+                if(sb.length() < rom.length()) {
+                    continue;
+                }
+
+                if(sb.substring(0, rom.length()).equals(rom)) {
+                    value += decimal[i][j];
+                    sb.delete(0, rom.length());
+                    break;
+                }
             }
         }
 
         if(sb.length() > 0) {
-            Log.d("roman_number_error", "Le nombre romain entré est faux");
             throw new NumberFormatException();
         }
 
-        return decimal;
+        return value;
     }
 
-    public static boolean isDecimal(char c) {
+    static boolean isDecimal(char c) {
         switch (c) {
             case '0':
             case '1':
@@ -65,7 +109,7 @@ public class NumberHelper {
         }
     }
 
-    public static boolean isRoman(char c) {
+    static boolean isRoman(char c) {
         switch (c) {
             case 'I':
             case 'V':

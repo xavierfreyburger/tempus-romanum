@@ -7,18 +7,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         monthEditText = findViewById(R.id.monthEditText);
         yearEditText = findViewById(R.id.yearEditText);
         eraRadioGroup = findViewById(R.id.eraRadioGroup);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab2 = findViewById(R.id.fab2);
 
         // Sélection par défaut de êre moderne
         if(eraRadioGroup.getCheckedRadioButtonId() == -1)
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         });
 
         // Bouton copier dans le presse-papier
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         });
 
         // Bouton reset date
-        FloatingActionButton fab2 = findViewById(R.id.fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,21 +232,27 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Activer/Désactiver l'affichage du clavier lors de l'edition des années
         if(romanNumber) {
-            yearEditText.setInputType(InputType.TYPE_NULL | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            yearEditText.setFocusable(false);
-            yearEditText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(romanNumber) {
-                        // Do something !!
-                        Toast.makeText(getApplicationContext(), "Affichage d'un picker année en romain !!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+
+            // Mettre l'affichage en mode serif
+            dayEditText.setTypeface(Typeface.SERIF);
+            monthEditText.setTypeface(Typeface.SERIF);
+            yearEditText.setTypeface(Typeface.SERIF);
+
+            // Paramétrer le clavier Romain
+            yearEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |  InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+
+            // Paramétrer le filtre des touches
+            yearEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps(), NumberHelper.romanNumeraFilter});
+
         } else {
+
+            // Mettre l'affichage en sans serif
+            dayEditText.setTypeface(Typeface.SANS_SERIF);
+            monthEditText.setTypeface(Typeface.SANS_SERIF);
+            yearEditText.setTypeface(Typeface.SANS_SERIF);
+
+            // Remettre les paramètre de saisie du clavier du système
             yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-            yearEditText.setFocusable(true);
-            yearEditText.setOnClickListener(null);
         }
 
 
@@ -318,7 +324,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if(!forceNewDate) {
             d = dayEditText.getText() == null || dayEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(dayEditText.getText().toString()) : Integer.valueOf(dayEditText.getText().toString());
             m = monthEditText.getText() == null || monthEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(monthEditText.getText().toString()) : Integer.valueOf(monthEditText.getText().toString());
-            y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
+            try {
+                y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
+            } catch (NumberFormatException e)
+            {
+                displayYearError();
+                y = null;
+            }
 
 
             // Contrôle de la validité du jour saisi max 31
@@ -428,8 +440,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Mise à jour du champ texte
         outputDate.setText(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
-        // TODO à supprimer
-        Log.d("date", date.toGMTString());
 
         // Si la date n'est pas la même que celle renseignée par l'utilisateur, mise à jour des champs de saisies
         Calendar calendar = Calendar.getInstance();
@@ -471,6 +481,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), TempusRomanumWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
+    }
+
+    public void displayYearError() {
+        yearEditText.setError(getString(R.string.number_error));
     }
 
     /*
