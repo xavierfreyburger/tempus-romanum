@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -230,26 +229,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onResume() {
         super.onResume();
 
-        // Activer/Désactiver l'affichage du clavier lors de l'edition des années
         if(romanNumber) {
-
-            // Mettre l'affichage en mode serif
-            dayEditText.setTypeface(Typeface.SERIF);
-            monthEditText.setTypeface(Typeface.SERIF);
-            yearEditText.setTypeface(Typeface.SERIF);
-
-            // Paramétrer le clavier Romain
+            // Paramétrer le clavier pour écrire en chiffres Romains
             yearEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |  InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
 
             // Paramétrer le filtre des touches
             yearEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps(), NumberHelper.romanNumeraFilter});
 
         } else {
-
-            // Mettre l'affichage en sans serif
-            dayEditText.setTypeface(Typeface.SANS_SERIF);
-            monthEditText.setTypeface(Typeface.SANS_SERIF);
-            yearEditText.setTypeface(Typeface.SANS_SERIF);
 
             // Remettre les paramètre de saisie du clavier du système
             yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
