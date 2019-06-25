@@ -43,12 +43,17 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         // Chargement des préférences
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 
+
         // 1.1 font size
-        final int fontSize = Integer.valueOf(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
+        final String fontSizeStr = pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size));
+        Integer fontSize = null;
+        if(fontSizeStr != null) {
+            fontSize = Integer.valueOf(fontSizeStr);
+        }
 
         // 1.2 font color
         final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
-        final int colorResId = context.getResources().getIdentifier(colorName,"color", context.getPackageName());
+        final int colorResId = context.getResources().getIdentifier(colorName, "color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
         // 2.1 Sentence mode
@@ -62,30 +67,25 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
-        if(yearDisplay) {
+        if (yearDisplay) {
             final String yearRefStr = pref.getString(context.getString(R.string.saved_date_year_reference), context.getString(R.string.default_date_year_reference));
             yearRef = Calendarium.InitiumCalendarii.valueOf(yearRefStr);
-        }
-        else {
-             yearRef = Calendarium.InitiumCalendarii.SINE;
+        } else {
+            yearRef = Calendarium.InitiumCalendarii.SINE;
         }
 
         // 2.5 Shorten era
         final boolean shortenEra = pref.getBoolean(context.getString(R.string.saved_date_shorten_era_display), Boolean.valueOf(context.getString(R.string.default_date_shorten_era_display)));
 
         // Faut-il calculer la mise à jour ?
-        if(currentDate != null)
-        {
+        if (currentDate != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(currentDate);
             Calendar newCal = Calendar.getInstance();
-            if(cal.get(Calendar.DAY_OF_MONTH) != newCal.get(Calendar.DAY_OF_MONTH) || cal.get(Calendar.MONTH) != newCal.get(Calendar.MONTH) || cal.get(Calendar.YEAR) != newCal.get(Calendar.YEAR))
-            {
+            if (cal.get(Calendar.DAY_OF_MONTH) != newCal.get(Calendar.DAY_OF_MONTH) || cal.get(Calendar.MONTH) != newCal.get(Calendar.MONTH) || cal.get(Calendar.YEAR) != newCal.get(Calendar.YEAR)) {
                 currentDate = newCal.getTime();
             }
-        }
-        else
-        {
+        } else {
             currentDate = new Date();
         }
 
@@ -96,7 +96,9 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
         views.setTextViewText(R.id.appwidget_text, widgetText);
         // Set font size
-        views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP,fontSize);
+        if(fontSize != null) {
+            views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP, fontSize);
+        }
         // Set font color
         views.setTextColor(R.id.appwidget_text, fontColor);
 
@@ -114,8 +116,9 @@ public class TempusRomanumWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(context.getApplicationContext(),"There was a problem loading the application: ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), "There was a problem loading the application: ", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override

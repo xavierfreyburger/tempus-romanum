@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 import androidx.preference.PreferenceFragmentCompat;
 
 /**
@@ -51,5 +52,10 @@ public class SettingsActivity extends AppCompatActivity {
     protected void attachBaseContext(Context base) {
         // Met à jour la locale
         super.attachBaseContext(LocaleHelper.updateLanguage(base));
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
     }
 }

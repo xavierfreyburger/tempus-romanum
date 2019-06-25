@@ -46,7 +46,7 @@ class LocaleHelper {
         return context;
     }
 
-    public static String getCurrentLocale() {
+    static String getCurrentLocale() {
         return getSystemLocale().getDefault().getLanguage();
     }
 

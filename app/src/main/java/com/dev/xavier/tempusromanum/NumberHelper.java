@@ -39,9 +39,10 @@ class NumberHelper {
                     if(source instanceof Spanned) {
                         StringBuilder sb = new StringBuilder(source);
                         for (int j = sb.length() - 1; j >= 0; j--) {
-                            if (!isRoman(sb.charAt(j))) {
-                                sb.deleteCharAt(j);
+                            if(isRoman(sb.charAt(j))) {
+                                continue;
                             }
+                            sb.deleteCharAt(j);
                         }
                         return sb.toString();
                     }
