@@ -1,0 +1,3 @@
+Tempus Romanum vous permet de générer facilement des dates au format latin.
+
+Vous pouvez aussi afficher la date du jour en latin sur votre page d'accueil grâce à son widget.
