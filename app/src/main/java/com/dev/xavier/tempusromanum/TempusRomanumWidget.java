@@ -8,12 +8,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,11 +45,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
 
         // 1.1 font size
-        final String fontSizeStr = pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size));
-        Integer fontSize = null;
-        if(fontSizeStr != null) {
-            fontSize = Integer.valueOf(fontSizeStr);
-        }
+        Integer fontSize = Integer.valueOf(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
 
         // 1.2 font color
         final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
@@ -96,9 +92,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
         views.setTextViewText(R.id.appwidget_text, widgetText);
         // Set font size
-        if(fontSize != null) {
-            views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP, fontSize);
-        }
+        views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP, fontSize);
         // Set font color
         views.setTextColor(R.id.appwidget_text, fontColor);
 

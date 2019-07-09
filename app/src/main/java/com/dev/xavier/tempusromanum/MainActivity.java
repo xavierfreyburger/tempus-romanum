@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
             date = c.getTime();
         }
-        SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Options concernant la date
         // 2.1 Sentence mode

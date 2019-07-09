@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 
+import androidx.preference.PreferenceManager;
+
 import java.util.Locale;
 
 /**
@@ -26,7 +28,7 @@ import java.util.Locale;
 class LocaleHelper {
 
     static Context updateLanguage(Context context) {
-        SharedPreferences pref = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         final boolean forcedLatin = pref.getBoolean(context.getString(R.string.saved_force_latin), Boolean.valueOf(context.getString(R.string.default_force_latin)));
         final String currentLanguage = Locale.getDefault().getLanguage();
 
