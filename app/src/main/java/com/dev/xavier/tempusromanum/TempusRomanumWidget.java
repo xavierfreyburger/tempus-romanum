@@ -45,7 +45,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
 
         // 1.1 font size
-        Integer fontSize = Integer.valueOf(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
+        int fontSize = Integer.parseInt(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
 
         // 1.2 font color
         final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
@@ -53,13 +53,13 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
         // 2.1 Sentence mode
-        final boolean sentenceMode = pref.getBoolean(context.getString(R.string.saved_date_sentence_mode), Boolean.valueOf(context.getString(R.string.default_date_sentence_mode)));
+        final boolean sentenceMode = pref.getBoolean(context.getString(R.string.saved_date_sentence_mode), Boolean.parseBoolean(context.getString(R.string.default_date_sentence_mode)));
 
         // 2.2 Display week day
-        final boolean displayWeekDay = pref.getBoolean(context.getString(R.string.saved_date_week_day_display), Boolean.valueOf(context.getString(R.string.default_date_week_day_display)));
+        final boolean displayWeekDay = pref.getBoolean(context.getString(R.string.saved_date_week_day_display), Boolean.parseBoolean(context.getString(R.string.default_date_week_day_display)));
 
         // 2.3 Display year
-        final boolean yearDisplay = pref.getBoolean(context.getString(R.string.saved_date_year_display), Boolean.valueOf(context.getString(R.string.default_date_year_display)));
+        final boolean yearDisplay = pref.getBoolean(context.getString(R.string.saved_date_year_display), Boolean.parseBoolean(context.getString(R.string.default_date_year_display)));
 
         // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
@@ -71,7 +71,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         }
 
         // 2.5 Shorten era
-        final boolean shortenEra = pref.getBoolean(context.getString(R.string.saved_date_shorten_era_display), Boolean.valueOf(context.getString(R.string.default_date_shorten_era_display)));
+        final boolean shortenEra = pref.getBoolean(context.getString(R.string.saved_date_shorten_era_display), Boolean.parseBoolean(context.getString(R.string.default_date_shorten_era_display)));
 
         // Faut-il calculer la mise à jour ?
         if (currentDate != null) {

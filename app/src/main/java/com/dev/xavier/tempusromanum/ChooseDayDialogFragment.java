@@ -43,7 +43,7 @@ public class ChooseDayDialogFragment extends DialogFragment {
             }
         } else {
             // En décimal
-            dayOfMonth = Integer.valueOf(daytxt);
+            dayOfMonth = Integer.parseInt(daytxt);
         }
 
         // Création du dialogue

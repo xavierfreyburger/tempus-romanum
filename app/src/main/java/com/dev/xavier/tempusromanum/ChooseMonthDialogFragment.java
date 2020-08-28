@@ -43,7 +43,7 @@ public class ChooseMonthDialogFragment extends DialogFragment {
                 }
             }
         } else {
-            month = Integer.valueOf(monthtxt);
+            month = Integer.parseInt(monthtxt);
         }
 
         // Création du dialogue

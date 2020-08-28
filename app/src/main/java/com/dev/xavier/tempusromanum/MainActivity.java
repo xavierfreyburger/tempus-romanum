@@ -270,7 +270,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Met à jour la locale
         super.attachBaseContext(LocaleHelper.updateLanguage(base));
         // Mettre à jour l'info de l'affichage en mode romain ou decimal
-        romanNumber = LocaleHelper.getCurrentLocale().equals(getString(R.string.latin_locale_code));
+        //romanNumber = Locale.getDefault().getLanguage().equals(getString(R.string.latin_locale_code));
+        romanNumber = LocaleHelper.getCurrentLocale(base).equals(getString(R.string.latin_locale_code));
     }
 
     private void prefNumberValueRetriever(SharedPreferences pref, String key,  EditText editText) {
@@ -280,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             if(romanNumber)
             {
                 if(!NumberHelper.isRoman(value.charAt(0))) {
-                    value = Calendarium.romanusNumerus(Integer.valueOf(value));
+                    value = Calendarium.romanusNumerus(Integer.parseInt(value));
                 }
             } else {
                 if(!NumberHelper.isDecimal(value.charAt(0))) {
@@ -406,13 +407,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Options concernant la date
         // 2.1 Sentence mode
-        final boolean sentenceMode = pref.getBoolean(getString(R.string.saved_date_sentence_mode), Boolean.valueOf(getString(R.string.default_date_sentence_mode)));
+        final boolean sentenceMode = pref.getBoolean(getString(R.string.saved_date_sentence_mode), Boolean.parseBoolean(getString(R.string.default_date_sentence_mode)));
 
         // 2.2 Display week day
-        final boolean displayWeekDay = pref.getBoolean(getString(R.string.saved_date_week_day_display), Boolean.valueOf(getString(R.string.default_date_week_day_display)));
+        final boolean displayWeekDay = pref.getBoolean(getString(R.string.saved_date_week_day_display), Boolean.parseBoolean(getString(R.string.default_date_week_day_display)));
 
         // 2.3 Display year
-        final boolean yearDisplay = pref.getBoolean(getString(R.string.saved_date_year_display), Boolean.valueOf(getString(R.string.default_date_year_display)));
+        final boolean yearDisplay = pref.getBoolean(getString(R.string.saved_date_year_display), Boolean.parseBoolean(getString(R.string.default_date_year_display)));
 
         // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
@@ -425,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
 
         // 2.5 Shorten era
-        final boolean shortenEra = pref.getBoolean(getString(R.string.saved_date_shorten_era_display), Boolean.valueOf(getString(R.string.default_date_shorten_era_display)));
+        final boolean shortenEra = pref.getBoolean(getString(R.string.saved_date_shorten_era_display), Boolean.parseBoolean(getString(R.string.default_date_shorten_era_display)));
 
         // Mise à jour du champ texte
         outputDate.setText(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
