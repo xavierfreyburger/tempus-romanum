@@ -108,7 +108,7 @@ limitations under the License.
     <string name="saved_date_year_reference" translatable="false">year_reference</string>
     <string name="default_date_year_reference" translatable="false">ANNO_DOMINI</string>
     <string name="year_reference_anno_domini">Anno Domini</string>
-    <string name="year_reference_rome_fondation">Rome fondation</string>
+    <string name="year_reference_rome_fondation">Founding of Rome</string>
     <!-- 2.5 Shorten era -->
     <string name="date_shorten_era_display_title">Shorten era</string>
     <string name="saved_date_shorten_era_display" translatable="false">shorten_era</string>
@@ -123,4 +123,19 @@ limitations under the License.
     <string name="default_force_latin" translatable="false">false</string>
     <string name="dialog_day_of_month">Day</string>
     <string name="dialog_month">Month</string>
+    
+    <!-- 4. Notifications -->
+    <string name="notifications_header">Notifications</string>
+    <!-- 4.1 Founding of Rome -->
+    <string name="rome_founding_header">Founding of Rome day</string>
+    <string name="saved_rome_founding" translatable="false">alert_rome_founding</string>
+    <string name="default_rome_founding" translatable="false">false</string>
+    <!-- 4.2 Nones -->
+    <string name="nones_header">Nones day</string>
+    <string name="saved_nones" translatable="false">alert_nones</string>
+    <string name="default_nones" translatable="false">false</string>
+    <!-- 4.3 Ides -->
+    <string name="ides_header">Ides day</string>
+    <string name="saved_ides" translatable="false">alert_ides</string>
+    <string name="default_ides" translatable="false">false</string>
 </resources>

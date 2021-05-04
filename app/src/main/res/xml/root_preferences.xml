@@ -87,4 +87,26 @@ limitations under the License.
             app:defaultValue="@string/default_force_latin"
             />
     </PreferenceCategory>
+
+    <!-- 4. Notifications -->
+    <PreferenceCategory app:title="@string/notifications_header">
+        <!-- 4.1 Founding of Rome -->
+        <SwitchPreferenceCompat
+            app:title="@string/rome_founding_header"
+            app:key="@string/saved_rome_founding"
+            app:defaultValue="@string/default_rome_founding"
+            />
+        <!-- 4.2 Nones -->
+        <SwitchPreferenceCompat
+            app:title="@string/nones_header"
+            app:key="@string/saved_nones"
+            app:defaultValue="@string/default_nones"
+            />
+        <!-- 4.3 Ides -->
+        <SwitchPreferenceCompat
+            app:title="@string/ides_header"
+            app:key="@string/saved_ides"
+            app:defaultValue="@string/default_ides"
+            />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

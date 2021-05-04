@@ -1,5 +1,8 @@
 package com.dev.xavier.tempusromanum;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -33,18 +36,18 @@ import java.util.GregorianCalendar;
 
 /**
  * Copyright 2019 Xavier Freyburger
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, TextWatcher {
 
@@ -56,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private boolean customDate = false;
     private boolean lockTextWatcher = false;
     private boolean romanNumber = false;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +82,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         FloatingActionButton fab2 = findViewById(R.id.fab2);
 
         // Sélection par défaut de êre moderne
-        if(eraRadioGroup.getCheckedRadioButtonId() == -1)
-        {
+        if (eraRadioGroup.getCheckedRadioButtonId() == -1) {
             eraRadioGroup.check(R.id.adRadioButton);
         }
 
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         eraRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(!lockTextWatcher) {
+                if (!lockTextWatcher) {
                     customDate = true;
                     updateDate();
                 }
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("simple text",outputDate.getText());
+                ClipData clip = ClipData.newPlainText("simple text", outputDate.getText());
                 clipboard.setPrimaryClip(clip);
                 Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -168,8 +174,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        switch (key)
-        {
+        switch (key) {
             case "sentence_mode":
             case "week_day_display":
             case "year_display":
@@ -180,9 +185,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 updateWidget();
                 break;
             case "force_latin":
-                // Recharger la vue des paramètres pour qu'elle soit affichée en latin
+                // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                break;
+            case "alert_rome_founding":
+            case "alert_nones":
+            case "alert_ides":
+                // Mettre à jour les notifications
+                updateNotifications();
                 break;
         }
     }
@@ -203,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(!lockTextWatcher) {
+        if (!lockTextWatcher) {
             customDate = true;
             updateDate();
         }
@@ -216,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = mPrefs.edit();
         ed.putBoolean("customDate", customDate);
-        if(customDate) {
+        if (customDate) {
             ed.putString("day", dayEditText.getText().toString());
             ed.putString("month", monthEditText.getText().toString());
             ed.putString("year", yearEditText.getText().toString());
@@ -229,12 +240,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onResume() {
         super.onResume();
 
-        if(romanNumber) {
+        if (romanNumber) {
             // Paramétrer le clavier pour écrire en chiffres Romains
-            yearEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |  InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+            yearEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
 
             // Paramétrer le filtre des touches
-            yearEditText.setFilters(new InputFilter[] {new InputFilter.AllCaps(), NumberHelper.romanNumeraFilter});
+            yearEditText.setFilters(new InputFilter[]{new InputFilter.AllCaps(), NumberHelper.romanNumeraFilter});
 
         } else {
 
@@ -247,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         customDate = mPrefs.getBoolean("customDate", false);
 
         // Si une date à été entrée par l'utilisateur ==> restoration
-        if(customDate) {
+        if (customDate) {
 
             lockTextWatcher = true;
 
@@ -274,17 +285,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         romanNumber = LocaleHelper.getCurrentLocale(base).equals(getString(R.string.latin_locale_code));
     }
 
-    private void prefNumberValueRetriever(SharedPreferences pref, String key,  EditText editText) {
+    private void prefNumberValueRetriever(SharedPreferences pref, String key, EditText editText) {
         String value = pref.getString(key, null);
 
         if (value != null && value.length() > 0) {
-            if(romanNumber)
-            {
-                if(!NumberHelper.isRoman(value.charAt(0))) {
+            if (romanNumber) {
+                if (!NumberHelper.isRoman(value.charAt(0))) {
                     value = Calendarium.romanusNumerus(Integer.parseInt(value));
                 }
             } else {
-                if(!NumberHelper.isDecimal(value.charAt(0))) {
+                if (!NumberHelper.isDecimal(value.charAt(0))) {
                     value = String.valueOf(NumberHelper.decimal(value));
                 }
             }
@@ -292,13 +302,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
 
-    private void updateDate()
-    {
+    private void updateDate() {
         updateDate(false);
     }
 
-    private void updateDate(boolean forceNewDate)
-    {
+    @SuppressLint("NonConstantResourceId")
+    private void updateDate(boolean forceNewDate) {
         final Date date;
 
         Integer d = null;
@@ -311,13 +320,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         yearEditText.setError(null);
 
-        if(!forceNewDate) {
+        if (!forceNewDate) {
             d = dayEditText.getText() == null || dayEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(dayEditText.getText().toString()) : Integer.valueOf(dayEditText.getText().toString());
             m = monthEditText.getText() == null || monthEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(monthEditText.getText().toString()) : Integer.valueOf(monthEditText.getText().toString());
             try {
                 y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
-            } catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 displayYearError();
                 y = null;
             }
@@ -334,8 +342,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         newd = 1;
                     }
                 }
-                if(d != null)
-                {
+                if (d != null) {
                     updateDay = newd != d;
                     d = newd;
                 }
@@ -352,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         newm = 1;
                     }
                 }
-                if(m != null) {
+                if (m != null) {
                     updateMonth = newm != m;
                     m = newm;
                 }
@@ -369,25 +376,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         newy = 1;
                     }
                 }
-                if(y != null) {
+                if (y != null) {
                     updateYear = newy != y;
                     y = newy;
                 }
             }
         }
 
-        if(forceNewDate || (d == null && m == null && y == null))
-        {
+        if (forceNewDate || (d == null && m == null && y == null)) {
             // Toutes les zones sont vides, on initialise avec la date du jour
             date = new Date();
-        }
-        else if(d == null || m == null || y == null)
-        {
+        } else if (d == null || m == null || y == null) {
             // toutes les zones ne sont pas saisie, on laisse tel-quel
             return;
-        }
-        else
-        {
+        } else {
             // Calcul de la date
             Calendar c = Calendar.getInstance();
             c.set(Calendar.DAY_OF_MONTH, d);
@@ -417,11 +419,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // 2.4 Year reference
         final Calendarium.InitiumCalendarii yearRef;
-        if(yearDisplay) {
+        if (yearDisplay) {
             final String yearRefStr = pref.getString(getString(R.string.saved_date_year_reference), getString(R.string.default_date_year_reference));
             yearRef = Calendarium.InitiumCalendarii.valueOf(yearRefStr);
-        }
-        else {
+        } else {
             yearRef = Calendarium.InitiumCalendarii.SINE;
         }
 
@@ -435,17 +436,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         lockTextWatcher = true;
-        if(d == null || updateDay || d != calendar.get(Calendar.DAY_OF_MONTH)) {
+        if (d == null || updateDay || d != calendar.get(Calendar.DAY_OF_MONTH)) {
             dayEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.DAY_OF_MONTH)) : String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
         }
-        if(m == null || updateMonth || m != (calendar.get(Calendar.MONTH)+1)) {
+        if (m == null || updateMonth || m != (calendar.get(Calendar.MONTH) + 1)) {
             monthEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.MONTH) + 1) : String.valueOf(calendar.get(Calendar.MONTH) + 1));
         }
-        if(y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
+        if (y == null || updateYear || y != calendar.get(Calendar.YEAR)) {
             yearEditText.setText(romanNumber ? Calendarium.romanusNumerus(calendar.get(Calendar.YEAR)) : String.valueOf(calendar.get(Calendar.YEAR)));
         }
 
-        if(forceNewDate) {
+        if (forceNewDate) {
             switch (calendar.get(Calendar.ERA)) {
                 case GregorianCalendar.AD:
                     eraRadioGroup.check(R.id.adRadioButton);
@@ -475,6 +476,33 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     public void displayYearError() {
         yearEditText.setError(getString(R.string.number_error));
+    }
+
+    private void updateNotifications() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
+        final boolean nonesAlert = pref.getBoolean("alert_nones", false);
+        final boolean idesAlert = pref.getBoolean("alert_ides", false);
+
+        if (romeFoundationAlert || nonesAlert || idesAlert) {
+            // TODO Activer le service gérant les notifications
+
+            // Set the alarm to start at approximately 9:00 a.m.
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, 9);
+
+            // With setInexactRepeating(), you have to use one of the AlarmManager interval
+            // constants--in this case, AlarmManager.INTERVAL_DAY.
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        } else {
+            // TODO Désactiver le service gérant les notifications
+            if (alarmMgr!= null) {
+                alarmMgr.cancel(alarmIntent);
+            }
+        }
     }
 
     /*
