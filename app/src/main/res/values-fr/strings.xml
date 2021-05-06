@@ -87,7 +87,7 @@ limitations under the License.
     <string name="number_error">"Le nombre est erroné "</string>
     <string name="num_36">36</string>
     <string name="notifications_header">Notifications</string>
-    <string name="rome_founding_header">Jour de la fondation de Rome</string>
+    <string name="rome_founding_header">Anniversaire de la fondation de Rome</string>
     <string name="nones_header">Jour des nones</string>
     <string name="ides_header">Jour des ides</string>
     <string name="nones_label">Nones : </string>
