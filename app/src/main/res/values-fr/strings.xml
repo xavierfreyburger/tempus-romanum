@@ -90,4 +90,23 @@ limitations under the License.
     <string name="rome_founding_header">Jour de la fondation de Rome</string>
     <string name="nones_header">Jour des nones</string>
     <string name="ides_header">Jour des ides</string>
+    <string name="nones_label">Nones : </string>
+    <string name="ides_label">Ides : </string>
+    <string name="notification_nones_title">Aujourd\'hui ce sont les nones de </string>
+    <string name="notification_ides_title">Aujourd\'hui ce sont les ides de </string>
+    <string name="notification_rome_founding_title">C\'est l\'anniversaire de la fondation de Rome</string>
+    <string name="month_1">janvier</string>
+    <string name="month_2">février</string>
+    <string name="month_3">mars</string>
+    <string name="month_4">avril</string>
+    <string name="month_5">mai</string>
+    <string name="month_6">juin</string>
+    <string name="month_7">juillet</string>
+    <string name="month_8">août</string>
+    <string name="month_9">septembre</string>
+    <string name="month_10">octobre</string>
+    <string name="month_11">novembre</string>
+    <string name="month_12">décembre</string>
+    <string name="current_nones_title">Nones</string>
+    <string name="current_ides_title">Ides</string>
 </resources>

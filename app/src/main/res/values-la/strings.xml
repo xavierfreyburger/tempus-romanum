@@ -86,5 +86,23 @@ limitations under the License.
     <string name="num_8">VIII</string>
     <string name="num_9">IX</string>
     <string name="number_error">Numerus pravus est</string>
-    <string name="num_36">XXXVI</string> <!-- Ere courte -->
+    <string name="num_36">XXXVI</string>
+    <string name="nones_label">Nonae : </string>
+    <string name="ides_label">Idus : </string>
+    <string name="notification_nones_title">Est nonis </string>
+    <string name="notification_ides_title">Est idibus </string>
+    <string name="month_1">ianuariis</string>
+    <string name="month_2">februariis</string>
+    <string name="month_3">martiis</string>
+    <string name="month_4">aprilibus</string>
+    <string name="month_5">maiis</string>
+    <string name="month_6">iuniis</string>
+    <string name="month_7">iuliis</string>
+    <string name="month_8">augustis</string>
+    <string name="month_9">septembribus</string>
+    <string name="month_10">octobribus</string>
+    <string name="month_11">novembribus</string>
+    <string name="month_12">decembribus</string>
+    <string name="current_nones_title">Nonae</string>
+    <string name="current_ides_title">Idus</string> <!-- Ere courte -->
 </resources>

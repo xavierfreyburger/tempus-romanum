@@ -28,6 +28,13 @@ limitations under the License.
     <string name="latin_locale_code" translatable="false">la</string>
     <string name="number_error">This number is wrong</string>
     <string name="notification_channel" translatable="false">TempusRomanumChannel</string>
+    <string name="nones_label">Nones: </string>
+    <string name="ides_label">Ides: </string>
+
+    <!-- Notifications strings -->
+    <string name="notification_nones_title">Today it\'s the nones of </string>
+    <string name="notification_ides_title">Today it\'s the ides of </string>
+    <string name="notification_rome_founding_title">It\'s the founding of Rome anniversary</string>
 
     <!-- Day and month picker -->
     <string name="num_1">1</string>
@@ -62,6 +69,20 @@ limitations under the License.
     <string name="num_30">30</string>
     <string name="num_31">31</string>
     <string name="num_36">36</string>
+
+    <!-- Months -->
+    <string name="month_1">January</string>
+    <string name="month_2">February</string>
+    <string name="month_3">March</string>
+    <string name="month_4">April</string>
+    <string name="month_5">May</string>
+    <string name="month_6">June</string>
+    <string name="month_7">July</string>
+    <string name="month_8">August</string>
+    <string name="month_9">September</string>
+    <string name="month_10">October</string>
+    <string name="month_11">November</string>
+    <string name="month_12">December</string>
 
     <!-- Preference Titles -->
     <string name="preference_file_key" translatable="false">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>
@@ -114,6 +135,14 @@ limitations under the License.
     <string name="date_shorten_era_display_title">Shorten era</string>
     <string name="saved_date_shorten_era_display" translatable="false">shorten_era</string>
     <string name="default_date_shorten_era_display" translatable="false">true</string>
+    <!-- 2.6 Nones -->
+    <string name="current_nones_title">Nones</string>
+    <string name="saved_current_nones" translatable="false">current_nones</string>
+    <string name="default_current_nones" translatable="false">false</string>
+    <!-- 2.7 Ides -->
+    <string name="current_ides_title">Ides</string>
+    <string name="saved_current_ides" translatable="false">current_ides</string>
+    <string name="default_current_ides" translatable="false">false</string>
 
     <!-- 3. Force Latin -->
     <string name="force_latin_header">Language</string>
@@ -124,11 +153,11 @@ limitations under the License.
     <string name="default_force_latin" translatable="false">false</string>
     <string name="dialog_day_of_month">Day</string>
     <string name="dialog_month">Month</string>
-    
+
     <!-- 4. Notifications -->
     <string name="notifications_header">Notifications</string>
     <!-- 4.1 Founding of Rome -->
-    <string name="rome_founding_header">Founding of Rome day</string>
+    <string name="rome_founding_header">Founding of Rome anniversary</string>
     <string name="saved_rome_founding" translatable="false">alert_rome_founding</string>
     <string name="default_rome_founding" translatable="false">false</string>
     <!-- 4.2 Nones -->

@@ -52,6 +52,18 @@ limitations under the License.
             app:key="@string/saved_date_shorten_era_display"
             app:title="@string/date_shorten_era_display_title"
             app:defaultValue="@string/default_date_shorten_era_display"/>
+
+        <!-- 2.6 Nones -->
+        <SwitchPreferenceCompat
+            app:key="@string/saved_current_nones"
+            app:title="@string/current_nones_title"
+            app:defaultValue="@string/default_current_nones"/>
+
+        <!-- 2.7 Ides -->
+        <SwitchPreferenceCompat
+            app:key="@string/saved_current_ides"
+            app:title="@string/current_ides_title"
+            app:defaultValue="@string/default_current_ides"/>
     </PreferenceCategory>
 
     <!-- 1. Widget font -->

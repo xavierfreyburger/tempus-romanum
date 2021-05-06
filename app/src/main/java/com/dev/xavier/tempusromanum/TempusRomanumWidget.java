@@ -112,7 +112,6 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(context.getApplicationContext(), "There was a problem loading the application: ", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

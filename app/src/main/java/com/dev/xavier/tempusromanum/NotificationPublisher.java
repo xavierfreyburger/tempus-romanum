@@ -46,32 +46,32 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         // Générer le texte de la notification
         String title = null;
-        String message = null;
         Calendar cal = Calendar.getInstance();
         final int dayNumber = cal.get(Calendar.DAY_OF_MONTH);
         final int monthNumber = cal.get(Calendar.MONTH) + 1;
 
         if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
-            // TODO Message concernant les nones
-            title = "Nones";
-            message = "Aujourd'hui est le jour des nones";
+
+            // Message concernant les nones
+                title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
+
         } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
-            // TODO Message concernant les ides
-            title = "Ides";
-            message = "Aujourd'hui est le jour des ides";
+
+            // Message concernant les ides
+            title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
+
         } else if (dayNumber == romeFoundationDay && monthNumber == romeFoundationMonth) {
-            // TODO Message concernant le jour de la fondation de Rome
-            title = "Fondation de Rome";
-            message = "Aujourd'hui est l'anniversaire de la fondation de Rome";
+
+            // Message concernant l'anniversaire de la fondation de Rome
+            title = context.getString(R.string.notification_rome_founding_title);
+
+        } else {
+            title = "TEST";
+            // TODO return;
         }
 
-        if (title == null || message == null) {
-            // TODO à supprimer
-            title = "test";
-            message = new Date().toLocaleString();
-        }
         // Envoier la notification
-        sendNotification(context, title, message);
+        sendNotification(context, title, null);
     }
 
     private void sendNotification(Context context, String title, String message) {
@@ -97,17 +97,19 @@ public class NotificationPublisher extends BroadcastReceiver {
         alarmIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(alarmIntent);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+
 
         // Mise en place d'une alarme automatique à 9H
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTimeInMillis(System.currentTimeMillis());
-//            calendar.set(Calendar.HOUR_OF_DAY, 9);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
 
         // With setInexactRepeating(), you have to use one of the AlarmManager interval
         // constants--in this case, AlarmManager.INTERVAL_DAY.
-//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                    AlarmManager.INTERVAL_DAY, alarmIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        // Répétition toutes les 15 mins pour faire des tests
+        // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
     }
 
     private void cancelRepeating() {
@@ -115,6 +117,15 @@ public class NotificationPublisher extends BroadcastReceiver {
             alarmMgr.cancel(alarmIntent);
             alarmIntent = null;
             alarmMgr = null;
+        }
+    }
+
+    private String getMonthLabel(Context context, int monthNumber) {
+        try {
+            int resourceId = context.getResources().getIdentifier("month_" + monthNumber, "string", context.getPackageName());
+            return context.getString(resourceId);
+        } catch (Exception e) {
+            return "";
         }
     }
 }

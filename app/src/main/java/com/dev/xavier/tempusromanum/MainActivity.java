@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -426,8 +427,45 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // 2.5 Shorten era
         final boolean shortenEra = pref.getBoolean(getString(R.string.saved_date_shorten_era_display), Boolean.parseBoolean(getString(R.string.default_date_shorten_era_display)));
 
+        // 2.6 Display current Nones
+        final boolean displayNones = pref.getBoolean(getString(R.string.saved_current_nones), Boolean.parseBoolean(getString(R.string.default_current_nones)));
+
+        // 2.7 Display current Ides
+        final boolean displayIdes = pref.getBoolean(getString(R.string.saved_current_ides), Boolean.parseBoolean(getString(R.string.default_current_ides)));
+
+        // Génération de la date en latin
+        StringBuilder sb = new StringBuilder(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
+
+        // Ajout des compléments Nones/Ides si nécessaire
+        if (displayNones || displayIdes) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            final int currentMonth = cal.get(Calendar.MONTH) + 1;
+            sb.append("\n");
+            if (displayNones) {
+                // Afficher le jour des nones
+                final int nones = Calendarium.nonaeMensium(currentMonth);
+                try {
+                    int resourceId = getResources().getIdentifier("num_" + nones, "string", getPackageName());
+                    String number = getString(resourceId);
+                    sb.append("\n").append(getString(R.string.nones_label)).append(number);
+                } catch (Exception e) {
+                }
+            }
+            if (displayIdes) {
+                // Afficher le jour des ides
+                final int ides = Calendarium.idusMensium(currentMonth);
+                try {
+                    int resourceId = getResources().getIdentifier("num_" + ides, "string", getPackageName());
+                    String number = getString(resourceId);
+                    sb.append("\n").append(getString(R.string.ides_label)).append(number);
+                } catch (Exception e) {
+                }
+            }
+        }
+
         // Mise à jour du champ texte
-        outputDate.setText(Calendarium.tempus(date, sentenceMode, displayWeekDay, yearRef, shortenEra));
+        outputDate.setText(sb);
 
         // Si la date n'est pas la même que celle renseignée par l'utilisateur, mise à jour des champs de saisies
         Calendar calendar = Calendar.getInstance();
