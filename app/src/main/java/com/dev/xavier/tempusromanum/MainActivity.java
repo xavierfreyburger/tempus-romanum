@@ -1,10 +1,8 @@
 package com.dev.xavier.tempusromanum;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,7 +10,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -37,7 +34,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Copyright 2019 Xavier Freyburger
+ * Copyright 2021 Xavier Freyburger
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -451,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     int resourceId = getResources().getIdentifier("num_" + nones, "string", getPackageName());
                     String number = getString(resourceId);
                     sb.append("\n").append(getString(R.string.nones_label)).append(number);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             if (displayIdes) {
@@ -461,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     int resourceId = getResources().getIdentifier("num_" + ides, "string", getPackageName());
                     String number = getString(resourceId);
                     sb.append("\n").append(getString(R.string.ides_label)).append(number);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }
