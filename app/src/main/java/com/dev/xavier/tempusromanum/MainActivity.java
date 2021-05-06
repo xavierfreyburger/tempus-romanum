@@ -2,6 +2,8 @@ package com.dev.xavier.tempusromanum;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
@@ -17,7 +19,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -60,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private boolean lockTextWatcher = false;
     private boolean romanNumber = false;
 
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
+//    private AlarmManager alarmMgr;
+//    private PendingIntent alarmIntent;
 
 
     @Override
@@ -73,6 +74,18 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Initialisation du gestionnaire d'alarmes
+//        alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        // Initialisation du channel de notifications
+        String name = getString(R.string.notification_channel);
+        NotificationChannel channel = new NotificationChannel(name, name, NotificationManager.IMPORTANCE_DEFAULT);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        // Initialisation des contrôles
         outputDate = findViewById(R.id.outputDate);
         dayEditText = findViewById(R.id.dayEditText);
         monthEditText = findViewById(R.id.monthEditText);
@@ -90,56 +103,41 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         dayEditText.addTextChangedListener(this);
         monthEditText.addTextChangedListener(this);
         yearEditText.addTextChangedListener(this);
-        eraRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (!lockTextWatcher) {
-                    customDate = true;
-                    updateDate();
-                }
+        eraRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (!lockTextWatcher) {
+                customDate = true;
+                updateDate();
             }
         });
 
         // Mise en place du dialogue de choix du jour
-        dayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new ChooseDayDialogFragment();
-                newFragment.show(getSupportFragmentManager(), "dayOfMonth");
-            }
+        dayEditText.setOnClickListener(v -> {
+            DialogFragment newFragment = new ChooseDayDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "dayOfMonth");
         });
 
         // Mise en place du dialogue de choix du mois
-        monthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new ChooseMonthDialogFragment();
-                newFragment.show(getSupportFragmentManager(), "month");
-            }
+        monthEditText.setOnClickListener(v -> {
+            DialogFragment newFragment = new ChooseMonthDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "month");
         });
 
         // Bouton copier dans le presse-papier
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("simple text", outputDate.getText());
-                clipboard.setPrimaryClip(clip);
-                Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        fab.setOnClickListener(view -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("simple text", outputDate.getText());
+            clipboard.setPrimaryClip(clip);
+            Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
 
         // Bouton reset date
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Forcer la date du jour
-                customDate = false;
-                updateDate(true);
-                Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        fab2.setOnClickListener(view -> {
+            // Forcer la date du jour
+            customDate = false;
+            updateDate(true);
+            Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
 
         // Mise en place du listener des paramètres
@@ -281,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Met à jour la locale
         super.attachBaseContext(LocaleHelper.updateLanguage(base));
         // Mettre à jour l'info de l'affichage en mode romain ou decimal
-        //romanNumber = Locale.getDefault().getLanguage().equals(getString(R.string.latin_locale_code));
         romanNumber = LocaleHelper.getCurrentLocale(base).equals(getString(R.string.latin_locale_code));
     }
 
@@ -479,30 +476,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void updateNotifications() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
-        final boolean nonesAlert = pref.getBoolean("alert_nones", false);
-        final boolean idesAlert = pref.getBoolean("alert_ides", false);
-
-        if (romeFoundationAlert || nonesAlert || idesAlert) {
-            // TODO Activer le service gérant les notifications
-
-            // Set the alarm to start at approximately 9:00 a.m.
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR_OF_DAY, 9);
-
-            // With setInexactRepeating(), you have to use one of the AlarmManager interval
-            // constants--in this case, AlarmManager.INTERVAL_DAY.
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, alarmIntent);
-
-        } else {
-            // TODO Désactiver le service gérant les notifications
-            if (alarmMgr!= null) {
-                alarmMgr.cancel(alarmIntent);
-            }
-        }
+        // Appeller NotificationPublisher
+        sendBroadcast(new Intent(this, NotificationPublisher.class));
     }
 
     /*

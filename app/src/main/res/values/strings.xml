@@ -27,6 +27,7 @@ limitations under the License.
     <string name="date_separator" translatable="false">/</string>
     <string name="latin_locale_code" translatable="false">la</string>
     <string name="number_error">This number is wrong</string>
+    <string name="notification_channel" translatable="false">TempusRomanumChannel</string>
 
     <!-- Day and month picker -->
     <string name="num_1">1</string>

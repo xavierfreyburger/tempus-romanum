@@ -17,6 +17,7 @@ limitations under the License.
     package="com.dev.xavier.tempusromanum">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--    <uses-permission android:name="android.permission.WAKE_LOCK" />-->
 
     <application
         android:allowBackup="true"
@@ -39,9 +40,7 @@ limitations under the License.
                 android:resource="@xml/tempus_romanum_widget_info" />
         </receiver>
 
-        <receiver
-            android:name=".BootReceiver"
-            android:enabled="false">
+        <receiver android:name=".NotificationPublisher">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -57,5 +56,6 @@ limitations under the License.
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 </manifest>
