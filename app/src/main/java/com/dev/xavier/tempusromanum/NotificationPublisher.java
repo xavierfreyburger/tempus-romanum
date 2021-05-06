@@ -86,7 +86,7 @@ public class NotificationPublisher extends BroadcastReceiver {
             // TODO return;
         }
 
-        // Envoier la notification
+        // Envoyer la notification
         sendNotification(context, title, null);
     }
 
@@ -131,9 +131,9 @@ public class NotificationPublisher extends BroadcastReceiver {
     private void cancelRepeating() {
         if (alarmMgr != null && alarmIntent != null) {
             alarmMgr.cancel(alarmIntent);
-            alarmIntent = null;
-            alarmMgr = null;
         }
+        alarmIntent = null;
+        alarmMgr = null;
     }
 
     private String getMonthLabel(Context context, int monthNumber) {
