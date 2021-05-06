@@ -19,8 +19,10 @@ import java.util.GregorianCalendar;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class Calendarium
-{
+public class Calendarium {
+    private static final String[] romaniNumeri = {"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
+    private static final int[] intergri = {1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+
     public enum InitiumCalendarii {
         SINE, // les années ne sont pas affichées
         ANNO_DOMINI, // les années sont comptées depuis JC
@@ -35,8 +37,7 @@ public class Calendarium
      * @param p_eraBrevis si true, l’erre sera abrégée (A.D. ou  A.U.C.), sinon elle sera en toute lettre.
      * @return La date transcrite en latin
      */
-    public static String tempus(Date p_tempus, boolean p_est, boolean p_nomenDiei, InitiumCalendarii p_initium, boolean p_eraBrevis)
-    {
+    public static String tempus(Date p_tempus, boolean p_est, boolean p_nomenDiei, InitiumCalendarii p_initium, boolean p_eraBrevis) {
         Calendar calendarium = new GregorianCalendar();
         calendarium.setTime(p_tempus);
 
@@ -80,8 +81,7 @@ public class Calendarium
         else if (dies == idus)
             summa.append("idibus ")
                     .append(mensesRomaniAblativus(mensis));
-        else if (dies > idus && dies < dieiMensis)
-        {
+        else if (dies > idus && dies < dieiMensis) {
             String ordinalis;
 
             if (mensis == 2 && dieiMensis == 29 && dies == 25)
@@ -95,13 +95,11 @@ public class Calendarium
                     .append(ordinalis)
                     .append(" kalendas ")
                     .append(mensesRomaniAccusativus(mensis + 1));
-        }
-        else if (dies == dieiMensis)
+        } else if (dies == dieiMensis)
             summa.append("pridie kalendas ")
                     .append(mensesRomaniAccusativus(mensis + 1));
 
-        if (p_initium == InitiumCalendarii.AB_URBE_CONDITA)
-        {
+        if (p_initium == InitiumCalendarii.AB_URBE_CONDITA) {
             int annus = calendarium.get(Calendar.YEAR);
 
             // Quia Roma in DCCLIII aedificatus est.
@@ -117,8 +115,7 @@ public class Calendarium
             }
 
             // si est ante diem undecimum kalendas maias, annum uno minuit quia Roma ante diem undecimum kalendas maias aedificata est.
-            if (calendarium.get(Calendar.MONTH) < Calendar.APRIL || (calendarium.get(Calendar.MONTH) == Calendar.APRIL) && (calendarium.get(Calendar.DAY_OF_MONTH) < 21))
-            {
+            if (calendarium.get(Calendar.MONTH) < Calendar.APRIL || (calendarium.get(Calendar.MONTH) == Calendar.APRIL) && (calendarium.get(Calendar.DAY_OF_MONTH) < 21)) {
                 if (anteUrbemConditam)
                     annus++;
                 else if (annus > 1)
@@ -133,14 +130,11 @@ public class Calendarium
                 summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " Ant.U.C." : " ante Urbem conditam.");
             else
                 summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.U.C." : " ab Urbe condita.");
-        }
-        else if (p_initium == InitiumCalendarii.ANNO_DOMINI)
-        {
+        } else if (p_initium == InitiumCalendarii.ANNO_DOMINI) {
             int annus = calendarium.get(Calendar.YEAR);
 
             // si tempus post idum decembris, adde unum ad annum.
-            if (dies > idus && mensis == 12)
-            {
+            if (dies > idus && mensis == 12) {
                 if (calendarium.get(GregorianCalendar.ERA) == GregorianCalendar.AD)
                     annus++;
                 else if (annus > 1)
@@ -154,15 +148,13 @@ public class Calendarium
                 summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.D." : " anno domini.");
             else
                 summa.append(" ").append(annusRomanus).append(p_eraBrevis ? " A.C.N." : " ante christum natum.");
-        }
-        else
+        } else
             summa.append(".");
 
         return summa.toString();
     }
 
-    private static String nomenDiei(int p_diesHebdomadis)
-    {
+    private static String nomenDiei(int p_diesHebdomadis) {
         switch (p_diesHebdomadis) {
             case Calendar.SUNDAY:
                 return "dies solis ";
@@ -183,21 +175,27 @@ public class Calendarium
         throw new IllegalArgumentException(String.valueOf(p_diesHebdomadis));
     }
 
-    public static int idusMensium(int p_mensis)
-    {
-        if (p_mensis == 1 || p_mensis == 2 || p_mensis == 4 || p_mensis == 6 || p_mensis == 8 || p_mensis == 9 || p_mensis == 11 || p_mensis == 12)
-            return 13;
-        else
-            return 15;
+    public static int idusMensium(int p_mensis) {
+        switch (p_mensis) {
+            case 1:
+            case 2:
+            case 4:
+            case 6:
+            case 8:
+            case 9:
+            case 11:
+            case 12:
+                return 13;
+            default:
+                return 15;
+        }
     }
 
-    public static int nonaeMensium(int p_mensis)
-    {
+    public static int nonaeMensium(int p_mensis) {
         return idusMensium(p_mensis) - 8;
     }
 
-    private static String mensesRomaniAblativus(int p_mensis)
-    {
+    private static String mensesRomaniAblativus(int p_mensis) {
         switch (p_mensis) {
             case 1:
             case 13:
@@ -229,8 +227,7 @@ public class Calendarium
         throw new IllegalArgumentException(String.valueOf(p_mensis));
     }
 
-    private static String mensesRomaniAccusativus(int p_mensis)
-    {
+    private static String mensesRomaniAccusativus(int p_mensis) {
         switch (p_mensis) {
             case 1:
             case 13:
@@ -262,8 +259,7 @@ public class Calendarium
         throw new IllegalArgumentException(String.valueOf(p_mensis));
     }
 
-    private static String ordinalis(int p_arg)
-    {
+    private static String ordinalis(int p_arg) {
         switch (p_arg) {
             case 3:
                 return "tertium";
@@ -304,17 +300,13 @@ public class Calendarium
         throw new IllegalArgumentException(String.valueOf(p_arg));
     }
 
-    public static String romanusNumerus(int p_numerus)
-    {
+    public static String romanusNumerus(int p_numerus) {
         StringBuilder sb = new StringBuilder();
-        String[] romaniNumeri = new String[]{"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
-        int[] intergri = new int[]{1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
         for (int i = intergri.length - 1; i >= 0; i--) {
             int times = p_numerus / intergri[i];
             p_numerus %= intergri[i];
-            while (times > 0) {
+            for (; times > 0; times--) {
                 sb.append(romaniNumeri[i]);
-                times--;
             }
         }
         return sb.toString();

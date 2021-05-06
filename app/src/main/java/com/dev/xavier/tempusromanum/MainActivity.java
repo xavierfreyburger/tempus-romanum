@@ -62,9 +62,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private boolean lockTextWatcher = false;
     private boolean romanNumber = false;
 
-//    private AlarmManager alarmMgr;
-//    private PendingIntent alarmIntent;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +72,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Initialisation du gestionnaire d'alarmes
-//        alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
         // Initialisation du channel de notifications
         String name = getString(R.string.notification_channel);
+        // L'importance ne pourra plus être modifiée par la suite
         NotificationChannel channel = new NotificationChannel(name, name, NotificationManager.IMPORTANCE_DEFAULT);
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
 
@@ -95,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         FloatingActionButton fab = findViewById(R.id.fab);
         FloatingActionButton fab2 = findViewById(R.id.fab2);
 
-        // Sélection par défaut de êre moderne
+        // Sélection par défaut de l'êre moderne
         if (eraRadioGroup.getCheckedRadioButtonId() == -1) {
             eraRadioGroup.check(R.id.adRadioButton);
         }
@@ -125,8 +119,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Bouton copier dans le presse-papier
         fab.setOnClickListener(view -> {
+            // On ne copie que la phase de la date, pas les indications optionnelles concernant les nones et les ides (elles sont séparées par un saut de ligne)
+            String txt = (String) outputDate.getText();
+            if (txt == null) {
+                txt = "";
+            } else if (txt.contains("\n")) {
+                txt = txt.substring(0, txt.indexOf("\n"));
+            }
+
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("simple text", outputDate.getText());
+            ClipData clip = ClipData.newPlainText("simple text", txt);
             clipboard.setPrimaryClip(clip);
             Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
