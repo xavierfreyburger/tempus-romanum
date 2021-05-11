@@ -49,19 +49,13 @@ public class ChooseDayDialogFragment extends DialogFragment {
         // Création du dialogue
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.dialog_day_of_month))
-                .setSingleChoiceItems(R.array.days_of_month, dayOfMonth - 1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Sélectionner le jour correspondant
-                        ((MainActivity) getActivity()).getDayEditText().setText(values[which]);
-                        dismiss();
-                    }
+                .setSingleChoiceItems(R.array.days_of_month, dayOfMonth - 1, (dialog, which) -> {
+                    // Sélectionner le jour correspondant
+                    ((MainActivity) getActivity()).getDayEditText().setText(values[which]);
+                    dismiss();
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Fermer le dialogue sans rien changer
-                    }
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    // Fermer le dialogue sans rien changer
                 });
 
         return builder.create();

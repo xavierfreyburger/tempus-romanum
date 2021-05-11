@@ -24,31 +24,28 @@ class NumberHelper {
     private static final int[][] decimal = {{3000, 2000, 1000}, {900, 900, 800, 700, 600, 500, 400, 400, 300, 200, 100},
             {90, 90, 80, 70, 60, 50, 40, 40, 30, 20, 10}, {9, 9, 8, 7, 6, 5, 4, 4, 3, 2, 1}};
 
-    static InputFilter romanNumeraFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int i = start; i < end; i++) {
-                final char ch = source.charAt(i);
-                // only Roman numeral are allowed
-                if (ch == '\n') {
-                    return null;
-                } else if (!isRoman(ch)) {
-                    if (source instanceof Spanned) {
-                        StringBuilder sb = new StringBuilder(source);
-                        for (int j = sb.length() - 1; j >= 0; j--) {
-                            if (isRoman(sb.charAt(j))) {
-                                continue;
-                            }
-                            sb.deleteCharAt(j);
+    static InputFilter romanNumeraFilter = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            final char ch = source.charAt(i);
+            // only Roman numeral are allowed
+            if (ch == '\n') {
+                return null;
+            } else if (!isRoman(ch)) {
+                if (source instanceof Spanned) {
+                    StringBuilder sb = new StringBuilder(source);
+                    for (int j = sb.length() - 1; j >= 0; j--) {
+                        if (isRoman(sb.charAt(j))) {
+                            continue;
                         }
-                        return sb.toString();
-                    } else {
-                        return "";
+                        sb.deleteCharAt(j);
                     }
+                    return sb.toString();
+                } else {
+                    return "";
                 }
             }
-
-            return null;
         }
+        return null;
     };
 
 

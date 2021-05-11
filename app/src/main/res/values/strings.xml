@@ -28,6 +28,7 @@ limitations under the License.
     <string name="latin_locale_code" translatable="false">la</string>
     <string name="number_error">This number is wrong</string>
     <string name="notification_channel" translatable="false">TempusRomanumChannel</string>
+    <string name="notification_switch" translatable="false">notify</string>
     <string name="nones_label">Nones: </string>
     <string name="ides_label">Ides: </string>
 

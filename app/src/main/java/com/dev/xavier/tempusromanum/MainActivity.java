@@ -71,9 +71,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
         // Initialisation du channel de notifications
-        String name = getString(R.string.notification_channel);
-        // L'importance ne pourra plus être modifiée par la suite
-        NotificationChannel channel = new NotificationChannel(name, name, NotificationManager.IMPORTANCE_DEFAULT);
+        final String name = getString(R.string.notification_channel);
+        NotificationChannel channel = new NotificationChannel(name, name, NotificationManager.IMPORTANCE_DEFAULT); // L'importance ne pourra plus être modifiée par la suite
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
 
@@ -514,7 +513,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void updateNotifications() {
         // Appeller NotificationPublisher
-        sendBroadcast(new Intent(this, NotificationPublisher.class));
+        Intent intent = new Intent(this, NotificationPublisher.class);
+        intent.putExtra(getString(R.string.notification_switch), false);
+        sendBroadcast(intent);
     }
 
     /*

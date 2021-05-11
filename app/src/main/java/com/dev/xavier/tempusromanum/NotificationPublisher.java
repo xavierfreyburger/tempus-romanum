@@ -35,6 +35,7 @@ public class NotificationPublisher extends BroadcastReceiver {
     private static final int NOTIFICATION_ID = 1;
     private static final int romeFoundationDay = 21;
     private static final int romeFoundationMonth = 4;
+    private static final int notificationTargetHour = 8;
 
     private static AlarmManager alarmMgr;
     private static PendingIntent alarmIntent;
@@ -55,9 +56,14 @@ public class NotificationPublisher extends BroadcastReceiver {
             cancelRepeating();
             return;
         } else if (alarmMgr == null || alarmIntent == null) {
-            // Mettre en place la répétition automatique
+            // Mettre en place la répétition automatique pour le lendemain
             setupRepeating(context);
-            return;
+        }
+
+        // Récupération du paramétrage d'affichage de la notification
+        boolean notify = true;
+        if (intent != null) {
+            notify = intent.getExtras().getBoolean(context.getString(R.string.notification_switch), true);
         }
 
         // Générer le texte de la notification
@@ -66,30 +72,41 @@ public class NotificationPublisher extends BroadcastReceiver {
         final int dayNumber = cal.get(Calendar.DAY_OF_MONTH);
         final int monthNumber = cal.get(Calendar.MONTH) + 1;
 
-        if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
+        if (notify) {
+            if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
 
-            // Message concernant les nones
-            title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
+                // Message concernant les nones
+                title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
 
-        } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
+            } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
 
-            // Message concernant les ides
-            title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
+                // Message concernant les ides
+                title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
 
-        } else if (dayNumber == romeFoundationDay && monthNumber == romeFoundationMonth) {
+            } else if (dayNumber == romeFoundationDay && monthNumber == romeFoundationMonth) {
 
-            // Message concernant l'anniversaire de la fondation de Rome
-            title = context.getString(R.string.notification_rome_founding_title);
+                // Message concernant l'anniversaire de la fondation de Rome
+                title = context.getString(R.string.notification_rome_founding_title);
 
+            } else {
+                // Ce jour ne nécessite pas de notification
+                return;
+            }
         } else {
-            title = "TEST";
-            // TODO return;
+            // Il est demandé expressément de ne pas afficher de notification
+            return;
         }
 
         // Envoyer la notification
         sendNotification(context, title, null);
     }
 
+    /**
+     * Envoi d'une notification au système
+     * @param context
+     * @param title le titre de la notification
+     * @param message le message de la notification
+     */
     private void sendNotification(Context context, String title, String message) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -107,6 +124,10 @@ public class NotificationPublisher extends BroadcastReceiver {
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
+    /**
+     * Mise en œuvre de la répétition automatique de l'alarme
+     * @param context
+     */
     private void setupRepeating(Context context) {
 
         Intent intent = new Intent(context, NotificationPublisher.class);
@@ -115,19 +136,19 @@ public class NotificationPublisher extends BroadcastReceiver {
         alarmMgr.cancel(alarmIntent);
 
 
-        // Mise en place d'une alarme automatique à 9H
+        // Mise en place d'une alarme automatique pour le lendemain à 8H
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, notificationTargetHour);
 
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
+        // Mise en place de la répétition de l'alarme
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
-
-        // Répétition toutes les 15 mins pour faire des tests
-        // alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
     }
 
+    /**
+     * Désactivation de la répétition automatique de l'alarme
+     */
     private void cancelRepeating() {
         if (alarmMgr != null && alarmIntent != null) {
             alarmMgr.cancel(alarmIntent);
@@ -136,6 +157,12 @@ public class NotificationPublisher extends BroadcastReceiver {
         alarmMgr = null;
     }
 
+    /**
+     * Récupération du libélé du mois dans les fichiers strings pour prise ne compte de la locale du système
+     * @param context
+     * @param monthNumber numéro du mois : 1-12
+     * @return
+     */
     private String getMonthLabel(Context context, int monthNumber) {
         try {
             int resourceId = context.getResources().getIdentifier("month_" + monthNumber, "string", context.getPackageName());

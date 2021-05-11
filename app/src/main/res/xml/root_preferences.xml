@@ -20,50 +20,55 @@ limitations under the License.
 
         <!-- 2.1 Sentence mode -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_date_sentence_mode"
             app:key="@string/saved_date_sentence_mode"
-            app:title="@string/date_sentence_mode_title"
-            app:defaultValue="@string/default_date_sentence_mode"/>
+            app:title="@string/date_sentence_mode_title" />
 
         <!-- 2.2 Display week day -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_date_week_day_display"
             app:key="@string/saved_date_week_day_display"
-            app:title="@string/date_week_day_display_title"
-            app:defaultValue="@string/default_date_week_day_display"/>
+            app:title="@string/date_week_day_display_title" />
 
         <!-- 2.3 Display year -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_date_year_display"
             app:key="@string/saved_date_year_display"
-            app:title="@string/date_year_display_title"
-            app:defaultValue="@string/default_date_year_display"/>
+            app:title="@string/date_year_display_title" />
 
         <!-- 2.4 Year reference -->
         <ListPreference
-            app:dependency="@string/saved_date_year_display"
             app:defaultValue="@string/default_date_year_reference"
+            app:dependency="@string/saved_date_year_display"
             app:entries="@array/date_year_reference_entries"
             app:entryValues="@array/date_year_reference_values"
             app:key="@string/saved_date_year_reference"
             app:title="@string/date_year_reference_title"
-            app:useSimpleSummaryProvider="true"
-            />
+            app:useSimpleSummaryProvider="true" />
 
         <!-- 2.5 Shorten era -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_date_shorten_era_display"
             app:key="@string/saved_date_shorten_era_display"
-            app:title="@string/date_shorten_era_display_title"
-            app:defaultValue="@string/default_date_shorten_era_display"/>
+            app:title="@string/date_shorten_era_display_title" />
 
         <!-- 2.6 Nones -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_current_nones"
             app:key="@string/saved_current_nones"
-            app:title="@string/current_nones_title"
-            app:defaultValue="@string/default_current_nones"/>
+            app:title="@string/current_nones_title" />
 
         <!-- 2.7 Ides -->
         <SwitchPreferenceCompat
+            app:singleLineTitle="false"
+            app:defaultValue="@string/default_current_ides"
             app:key="@string/saved_current_ides"
-            app:title="@string/current_ides_title"
-            app:defaultValue="@string/default_current_ides"/>
+            app:title="@string/current_ides_title" />
     </PreferenceCategory>
 
     <!-- 1. Widget font -->
@@ -75,8 +80,7 @@ limitations under the License.
             app:entryValues="@array/font_size_values"
             app:key="@string/saved_font_size"
             app:title="@string/font_size_title"
-            app:useSimpleSummaryProvider="true"
-            />
+            app:useSimpleSummaryProvider="true" />
 
         <!-- 1.2 Font color -->
         <ListPreference
@@ -85,8 +89,7 @@ limitations under the License.
             app:entryValues="@array/font_color_values"
             app:key="@string/saved_font_color"
             app:title="@string/font_color_title"
-            app:useSimpleSummaryProvider="true"
-            />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <!-- 3. Force latin language
@@ -94,31 +97,31 @@ limitations under the License.
         app:summaryOff="@string/force_latin_off" -->
     <PreferenceCategory app:title="@string/force_latin_header">
         <SwitchPreferenceCompat
-            app:title="@string/force_latin"
-            app:key="@string/saved_force_latin"
+            app:singleLineTitle="false"
             app:defaultValue="@string/default_force_latin"
-            />
+            app:key="@string/saved_force_latin"
+            app:title="@string/force_latin" />
     </PreferenceCategory>
 
     <!-- 4. Notifications -->
     <PreferenceCategory app:title="@string/notifications_header">
         <!-- 4.1 Founding of Rome -->
         <SwitchPreferenceCompat
-            app:title="@string/rome_founding_header"
-            app:key="@string/saved_rome_founding"
+            app:singleLineTitle="false"
             app:defaultValue="@string/default_rome_founding"
-            />
+            app:key="@string/saved_rome_founding"
+            app:title="@string/rome_founding_header" />
         <!-- 4.2 Nones -->
         <SwitchPreferenceCompat
-            app:title="@string/nones_header"
-            app:key="@string/saved_nones"
+            app:singleLineTitle="false"
             app:defaultValue="@string/default_nones"
-            />
+            app:key="@string/saved_nones"
+            app:title="@string/nones_header" />
         <!-- 4.3 Ides -->
         <SwitchPreferenceCompat
-            app:title="@string/ides_header"
-            app:key="@string/saved_ides"
+            app:singleLineTitle="false"
             app:defaultValue="@string/default_ides"
-            />
+            app:key="@string/saved_ides"
+            app:title="@string/ides_header" />
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>
