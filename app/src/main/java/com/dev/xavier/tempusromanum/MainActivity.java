@@ -141,9 +141,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Mise en place du listener des paramètres
         setupSharedPreferences();
-
-        // Mise en œuvre de l'affichage des notifications si nécessaire
-        updateNotifications();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.dev.xavier.tempusromanum;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -14,6 +13,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Copyright 2021 Xavier Freyburger
@@ -41,9 +41,87 @@ public class NotificationPublisher extends BroadcastReceiver {
     private static PendingIntent alarmIntent;
 
     @Override
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     public void onReceive(Context context, Intent intent) {
+        if(intent != null) {
+            // 1. Réception de l'évenement de boot -> si nécessaire mettre en place la répétition automatique
+            if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+                // Réception de l'évènement de boot
+                setupRepeating(context);
+                return;
+            }
 
+            // 2. Analyse des Extras, si notity == false -> mettre en place la répétition automatique
+            // Récupération du paramétrage d'affichage de la notification
+            final boolean notify = intent.getExtras().getBoolean(context.getString(R.string.notification_switch), true);
+            if(!notify) {
+                setupRepeating(context);
+                return;
+            }
+        }
+
+        // 3. Transfert au gestionnaire de notification
+        sendNotification(context);
+    }
+
+    /**
+     * Envoi d'une notification au système
+     * @param context context
+     */
+    private void sendNotification(Context context) {
+        // Récupération du parmétrage des notifications
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
+        final boolean nonesAlert = pref.getBoolean("alert_nones", false);
+        final boolean idesAlert = pref.getBoolean("alert_ides", false);
+
+        // Générer le texte de la notification
+        String title;
+        Calendar cal = Calendar.getInstance();
+        final int dayNumber = cal.get(Calendar.DAY_OF_MONTH);
+        final int monthNumber = cal.get(Calendar.MONTH) + 1;
+
+        if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
+
+            // Message concernant les nones
+            title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
+
+        } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
+
+            // Message concernant les ides
+            title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
+
+        } else if (romeFoundationAlert && monthNumber == romeFoundationMonth && dayNumber == romeFoundationDay) {
+
+            // Message concernant l'anniversaire de la fondation de Rome
+            title = context.getString(R.string.notification_rome_founding_title);
+
+        } else {
+            // TODO Ce jour ne nécessite pas de notification
+            // return;
+            title = "TEST : " + new Date().toLocaleString();
+        }
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // PendingIntent permettant d'ouvrir l'application lors d'un clic sur la notification
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, new Intent(context, MainActivity.class), 0);
+
+        Notification notification = new NotificationCompat.Builder(context, context.getString(R.string.notification_channel))
+                .setSmallIcon(R.drawable.ic_stat_tempusromanum)
+                .setContentTitle(title)
+                .setContentText(null)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    /**
+     * Mise en œuvre de la répétition automatique de l'alarme
+     * @param context context
+     */
+    private void setupRepeating(Context context) {
         // Récupération du parmétrage des notifications
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
@@ -54,92 +132,26 @@ public class NotificationPublisher extends BroadcastReceiver {
         if (!(romeFoundationAlert || nonesAlert || idesAlert)) {
             // désactiver la répétition
             cancelRepeating();
-            return;
         } else if (alarmMgr == null || alarmIntent == null) {
             // Mettre en place la répétition automatique pour le lendemain
-            setupRepeating(context);
+            activateRepeating(context);
         }
-
-        // Récupération du paramétrage d'affichage de la notification
-        boolean notify = true;
-        if (intent != null) {
-            notify = intent.getExtras().getBoolean(context.getString(R.string.notification_switch), true);
-        }
-
-        // Générer le texte de la notification
-        String title = null;
-        Calendar cal = Calendar.getInstance();
-        final int dayNumber = cal.get(Calendar.DAY_OF_MONTH);
-        final int monthNumber = cal.get(Calendar.MONTH) + 1;
-
-        if (notify) {
-            if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
-
-                // Message concernant les nones
-                title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
-
-            } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
-
-                // Message concernant les ides
-                title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
-
-            } else if (dayNumber == romeFoundationDay && monthNumber == romeFoundationMonth) {
-
-                // Message concernant l'anniversaire de la fondation de Rome
-                title = context.getString(R.string.notification_rome_founding_title);
-
-            } else {
-                // Ce jour ne nécessite pas de notification
-                return;
-            }
-        } else {
-            // Il est demandé expressément de ne pas afficher de notification
-            return;
-        }
-
-        // Envoyer la notification
-        sendNotification(context, title, null);
     }
 
     /**
-     * Envoi d'une notification au système
-     * @param context
-     * @param title le titre de la notification
-     * @param message le message de la notification
+     * Activation de la répétition automatique de l'alarme
+     * @param context context
      */
-    private void sendNotification(Context context, String title, String message) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // PendingIntent permettant d'ouvrir l'application lors d'un clic sur la notification
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, new Intent(context, MainActivity.class), 0);
-
-        Notification notification = new NotificationCompat.Builder(context, context.getString(R.string.notification_channel))
-                .setSmallIcon(R.drawable.ic_stat_tempusromanum)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build();
-
-        notificationManager.notify(NOTIFICATION_ID, notification);
-    }
-
-    /**
-     * Mise en œuvre de la répétition automatique de l'alarme
-     * @param context
-     */
-    private void setupRepeating(Context context) {
-
+    private void activateRepeating(Context context) {
         Intent intent = new Intent(context, NotificationPublisher.class);
         alarmIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(alarmIntent);
 
-
         // Mise en place d'une alarme automatique pour le lendemain à 8H
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        // calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, notificationTargetHour);
 
         // Mise en place de la répétition de l'alarme
@@ -159,9 +171,9 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     /**
      * Récupération du libélé du mois dans les fichiers strings pour prise ne compte de la locale du système
-     * @param context
+     * @param context context
      * @param monthNumber numéro du mois : 1-12
-     * @return
+     * @return Le libellé du mois
      */
     private String getMonthLabel(Context context, int monthNumber) {
         try {
