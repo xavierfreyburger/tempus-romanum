@@ -13,7 +13,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Copyright 2021 Xavier Freyburger
@@ -42,7 +41,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent != null) {
+        if (intent != null) {
             // 1. Réception de l'évenement de boot -> si nécessaire mettre en place la répétition automatique
             if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
                 // Réception de l'évènement de boot
@@ -53,7 +52,7 @@ public class NotificationPublisher extends BroadcastReceiver {
             // 2. Analyse des Extras, si notity == false -> mettre en place la répétition automatique
             // Récupération du paramétrage d'affichage de la notification
             final boolean notify = intent.getExtras().getBoolean(context.getString(R.string.notification_switch), true);
-            if(!notify) {
+            if (!notify) {
                 setupRepeating(context);
                 return;
             }
@@ -65,6 +64,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     /**
      * Envoi d'une notification au système
+     *
      * @param context context
      */
     private void sendNotification(Context context) {
@@ -96,9 +96,8 @@ public class NotificationPublisher extends BroadcastReceiver {
             title = context.getString(R.string.notification_rome_founding_title);
 
         } else {
-            // TODO Ce jour ne nécessite pas de notification
-            // return;
-            title = "TEST : " + new Date().toLocaleString();
+            // Ce jour ne nécessite pas de notification
+            return;
         }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -119,6 +118,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     /**
      * Mise en œuvre de la répétition automatique de l'alarme
+     *
      * @param context context
      */
     private void setupRepeating(Context context) {
@@ -140,6 +140,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     /**
      * Activation de la répétition automatique de l'alarme
+     *
      * @param context context
      */
     private void activateRepeating(Context context) {
@@ -171,7 +172,8 @@ public class NotificationPublisher extends BroadcastReceiver {
 
     /**
      * Récupération du libélé du mois dans les fichiers strings pour prise ne compte de la locale du système
-     * @param context context
+     *
+     * @param context     context
      * @param monthNumber numéro du mois : 1-12
      * @return Le libellé du mois
      */
