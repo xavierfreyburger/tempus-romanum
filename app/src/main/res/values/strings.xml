@@ -33,8 +33,8 @@ limitations under the License.
     <string name="ides_label">Ides: </string>
 
     <!-- Notifications strings -->
-    <string name="notification_nones_title">Today it\'s the nones of </string>
-    <string name="notification_ides_title">Today it\'s the ides of </string>
+    <string name="notification_nones_title">"Today it's the nones "</string>
+    <string name="notification_ides_title">"Today it's the ides "</string>
     <string name="notification_rome_founding_title">It\'s the founding of Rome anniversary</string>
 
     <!-- Day and month picker -->
@@ -72,18 +72,18 @@ limitations under the License.
     <string name="num_36">36</string>
 
     <!-- Months -->
-    <string name="month_1">January</string>
-    <string name="month_2">February</string>
-    <string name="month_3">March</string>
-    <string name="month_4">April</string>
-    <string name="month_5">May</string>
-    <string name="month_6">June</string>
-    <string name="month_7">July</string>
-    <string name="month_8">August</string>
-    <string name="month_9">September</string>
-    <string name="month_10">October</string>
-    <string name="month_11">November</string>
-    <string name="month_12">December</string>
+    <string name="month_1">of January</string>
+    <string name="month_2">of February</string>
+    <string name="month_3">of March</string>
+    <string name="month_4">of April</string>
+    <string name="month_5">of May</string>
+    <string name="month_6">of June</string>
+    <string name="month_7">of July</string>
+    <string name="month_8">of August</string>
+    <string name="month_9">of September</string>
+    <string name="month_10">of October</string>
+    <string name="month_11">of November</string>
+    <string name="month_12">of December</string>
 
     <!-- Preference Titles -->
     <string name="preference_file_key" translatable="false">com.dev.xavier.tempusromanum.PREFERENCE_FILE_KEY</string>

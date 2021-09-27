@@ -28,12 +28,12 @@ public class ChooseMonthDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final String[] values = getResources().getStringArray(R.array.months);
-        final String monthtxt = ((MainActivity) getActivity()).getMonthEditText().getText().toString();
+        final String monthtxt = ((MainActivity) requireActivity()).getMonthEditText().getText().toString();
 
         // Récupération de la valeur du mois actuellement sélectionné
         int month = 1;
 
-        if (((MainActivity) getActivity()).isRomanNumber()) {
+        if (((MainActivity) requireActivity()).isRomanNumber()) {
             // En romain
             for (int i = 1; i <= values.length; i++) {
                 if (values[i - 1].equals(monthtxt)) {
@@ -50,7 +50,7 @@ public class ChooseMonthDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.dialog_month))
                 .setSingleChoiceItems(R.array.months, month - 1, (dialog, which) -> {
                     // Sélectionner le mois correspondant
-                    ((MainActivity) getActivity()).getMonthEditText().setText(values[which]);
+                    ((MainActivity) requireActivity()).getMonthEditText().setText(values[which]);
                     dismiss();
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

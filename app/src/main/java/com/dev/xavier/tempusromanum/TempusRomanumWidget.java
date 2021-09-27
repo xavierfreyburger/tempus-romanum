@@ -105,7 +105,7 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.setComponent(new ComponentName(context.getPackageName(), MainActivity.class.getName()));
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         } catch (ActivityNotFoundException e) {

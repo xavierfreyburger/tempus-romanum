@@ -59,7 +59,7 @@ public class Calendarium {
         if (dies == 1)
             summa.append("kalendis ")
                     .append(mensesRomaniAblativus(mensis));
-        else if (dies > 1 && dies < nonae - 1)
+        else if (dies < nonae - 1) // dies > 1 && dies < nonae - 1
             summa.append("ante diem ")
                     .append(ordinalis(nonae - dies + 1))
                     .append(" nonas ")
@@ -121,7 +121,7 @@ public class Calendarium {
                 else if (annus > 1)
                     annus--;
                 else
-                    anteUrbemConditam = !anteUrbemConditam;
+                    anteUrbemConditam = true;
             }
 
             String annusRomanus = romanusNumerus(annus);

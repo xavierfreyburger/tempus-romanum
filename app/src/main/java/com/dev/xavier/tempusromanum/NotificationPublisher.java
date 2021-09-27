@@ -1,5 +1,6 @@
 package com.dev.xavier.tempusromanum;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -103,7 +104,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // PendingIntent permettant d'ouvrir l'application lors d'un clic sur la notification
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, new Intent(context, MainActivity.class), 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(context, context.getString(R.string.notification_channel))
                 .setSmallIcon(R.drawable.ic_stat_tempusromanum)
@@ -143,9 +144,11 @@ public class NotificationPublisher extends BroadcastReceiver {
      *
      * @param context context
      */
+    @SuppressLint("UnspecifiedImmutableFlag")
     private void activateRepeating(Context context) {
         Intent intent = new Intent(context, NotificationPublisher.class);
-        alarmIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
+        // The mutable PendingIntent object allows the system to add the EXTRA_ALARM_COUNT intent extra
+        alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(alarmIntent);
 

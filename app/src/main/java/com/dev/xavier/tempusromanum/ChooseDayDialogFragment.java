@@ -2,7 +2,6 @@ package com.dev.xavier.tempusromanum;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,11 +28,11 @@ public class ChooseDayDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final String[] values = getResources().getStringArray(R.array.days_of_month);
-        final String daytxt = ((MainActivity) getActivity()).getDayEditText().getText().toString();
+        final String daytxt = ((MainActivity) requireActivity()).getDayEditText().getText().toString();
 
         // Récupération de la valeur du jour actuellement sélectionné
         int dayOfMonth = 1;
-        if (((MainActivity) getActivity()).isRomanNumber()) {
+        if (((MainActivity) requireActivity()).isRomanNumber()) {
             // En romain
             for (int i = 1; i <= values.length; i++) {
                 if (values[i - 1].equals(daytxt)) {
@@ -51,7 +50,7 @@ public class ChooseDayDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.dialog_day_of_month))
                 .setSingleChoiceItems(R.array.days_of_month, dayOfMonth - 1, (dialog, which) -> {
                     // Sélectionner le jour correspondant
-                    ((MainActivity) getActivity()).getDayEditText().setText(values[which]);
+                    ((MainActivity) requireActivity()).getDayEditText().setText(values[which]);
                     dismiss();
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
