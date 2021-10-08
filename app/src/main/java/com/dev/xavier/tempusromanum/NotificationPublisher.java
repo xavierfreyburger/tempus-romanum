@@ -84,17 +84,17 @@ public class NotificationPublisher extends BroadcastReceiver {
         if (nonesAlert && dayNumber == Calendarium.nonaeMensium(monthNumber)) {
 
             // Message concernant les nones
-            title = context.getString(R.string.notification_nones_title) + getMonthLabel(context, monthNumber);
+            title = LocaleHelper.getLocaleStringResource(R.string.notification_nones_title, context) + getMonthLabel(context, monthNumber);
 
         } else if (idesAlert && dayNumber == Calendarium.idusMensium(monthNumber)) {
 
             // Message concernant les ides
-            title = context.getString(R.string.notification_ides_title) + getMonthLabel(context, monthNumber);
+            title = LocaleHelper.getLocaleStringResource(R.string.notification_ides_title, context) + getMonthLabel(context, monthNumber);
 
         } else if (romeFoundationAlert && monthNumber == romeFoundationMonth && dayNumber == romeFoundationDay) {
 
             // Message concernant l'anniversaire de la fondation de Rome
-            title = context.getString(R.string.notification_rome_founding_title);
+            title = LocaleHelper.getLocaleStringResource(R.string.notification_rome_founding_title, context);
 
         } else {
             // Ce jour ne nécessite pas de notification
@@ -155,8 +155,9 @@ public class NotificationPublisher extends BroadcastReceiver {
         // Mise en place d'une alarme automatique pour le lendemain à 8H
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        // calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, notificationTargetHour);
+        // Pour tests
+        //calendar.add(Calendar.SECOND, 5);
 
         // Mise en place de la répétition de l'alarme
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
@@ -174,7 +175,7 @@ public class NotificationPublisher extends BroadcastReceiver {
     }
 
     /**
-     * Récupération du libélé du mois dans les fichiers strings pour prise ne compte de la locale du système
+     * Récupération du libélé du mois dans les fichiers strings avec prise ne compte de la locale de l'application
      *
      * @param context     context
      * @param monthNumber numéro du mois : 1-12
@@ -183,7 +184,7 @@ public class NotificationPublisher extends BroadcastReceiver {
     private String getMonthLabel(Context context, int monthNumber) {
         try {
             int resourceId = context.getResources().getIdentifier("month_" + monthNumber, "string", context.getPackageName());
-            return context.getString(resourceId);
+            return LocaleHelper.getLocaleStringResource(resourceId, context);
         } catch (Exception e) {
             return "";
         }
