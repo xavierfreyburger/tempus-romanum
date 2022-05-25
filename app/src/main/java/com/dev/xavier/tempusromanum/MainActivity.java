@@ -323,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 y = yearEditText.getText() == null || yearEditText.getText().length() == 0 ? null : romanNumber ? NumberHelper.decimal(yearEditText.getText().toString()) : Integer.valueOf(yearEditText.getText().toString());
             } catch (NumberFormatException e) {
                 displayYearError();
-                y = null;
             }
 
 

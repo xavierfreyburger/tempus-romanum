@@ -98,6 +98,8 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         } else {
             // Ce jour ne nécessite pas de notification
+            // -- Pour tests -> commenter "return"
+            //title = "It's testing day !!";
             return;
         }
 
@@ -148,7 +150,11 @@ public class NotificationPublisher extends BroadcastReceiver {
     private void activateRepeating(Context context) {
         Intent intent = new Intent(context, NotificationPublisher.class);
         // The mutable PendingIntent object allows the system to add the EXTRA_ALARM_COUNT intent extra
-        alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+            alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(alarmIntent);
 
@@ -156,8 +162,6 @@ public class NotificationPublisher extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, notificationTargetHour);
-        // Pour tests
-        //calendar.add(Calendar.SECOND, 5);
 
         // Mise en place de la répétition de l'alarme
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
