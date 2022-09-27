@@ -1,5 +1,6 @@
 package com.dev.xavier.tempusromanum;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -49,12 +50,12 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // 1.2 font color
         final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
-        final int colorResId = context.getResources().getIdentifier(colorName, "color", context.getPackageName());
+        @SuppressLint("DiscouragedApi") final int colorResId = context.getResources().getIdentifier(colorName, "color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
         // 1.3 Background color
         final String backgroundColorName = pref.getString(context.getString(R.string.saved_background_color), context.getString(R.string.default_background_color));
-        final int backgroundColorResId = context.getResources().getIdentifier(backgroundColorName, "color", context.getPackageName());
+        @SuppressLint("DiscouragedApi") final int backgroundColorResId = context.getResources().getIdentifier(backgroundColorName, "color", context.getPackageName());
         final int backgroundColor = ContextCompat.getColor(context, backgroundColorResId);
 
         // 1.4 Background transparency ratio (value is actually stored as opacity [0-100] we need to transforme it to transparency)
@@ -135,13 +136,11 @@ public class TempusRomanumWidget extends AppWidgetProvider {
     }
 
     private static int getColorWithAlpha(int color, float ratio) {
-        int newColor = 0;
         int alpha = Math.round(Color.alpha(color) * ratio);
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
-        newColor = Color.argb(alpha, r, g, b);
-        return newColor;
+        return Color.argb(alpha, r, g, b);
     }
 }
 

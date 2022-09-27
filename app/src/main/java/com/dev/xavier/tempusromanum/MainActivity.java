@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 // Afficher le jour des nones
                 final int nones = Calendarium.nonaeMensium(currentMonth);
                 try {
-                    int resourceId = getResources().getIdentifier("num_" + nones, "string", getPackageName());
+                    @SuppressLint("DiscouragedApi") int resourceId = getResources().getIdentifier("num_" + nones, "string", getPackageName());
                     String number = getString(resourceId);
                     sb.append("\n").append(getString(R.string.nones_label)).append(number);
                 } catch (Exception ignored) {
@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 // Afficher le jour des ides
                 final int ides = Calendarium.idusMensium(currentMonth);
                 try {
-                    int resourceId = getResources().getIdentifier("num_" + ides, "string", getPackageName());
+                    @SuppressLint("DiscouragedApi") int resourceId = getResources().getIdentifier("num_" + ides, "string", getPackageName());
                     String number = getString(resourceId);
                     sb.append("\n").append(getString(R.string.ides_label)).append(number);
                 } catch (Exception ignored) {

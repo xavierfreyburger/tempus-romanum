@@ -22,7 +22,7 @@ limitations under the License.
     <string name="date_reset">Nunc tempus est hodie</string> <!-- Maintenant la date est aujourd'hui-->
     <string name="era_bc">A.C.N.</string> <!-- ante christum natum -->
     <string name="era_ad">A.D.</string> <!-- Anno domini -->
-    <string name="widget_font_header">Fenestra-instrumento</string> <!-- la forme des lettres dans la fenetre outil -->
+    <string name="widget_font_header">Fenestra-instrumentum</string> <!-- la forme des lettres dans la fenetre outil -->
     <string name="font_size_title">Amplitudo litterarum</string> <!-- taille des lettres -->
     <string name="font_color_title">Color litterarum</string> <!-- couleur des lettres -->
     <string name="color_white">Albus</string>
@@ -109,5 +109,7 @@ limitations under the License.
     <string name="rome_founding_header">Urbis conditae commemoratio</string>
     <string name="nones_header">Nonarum dies</string>
     <string name="ides_header">Iduum dies</string>
-    <string name="notification_rome_founding_title">Hodie Urbs condita commemoratur</string> <!-- Ere courte -->
+    <string name="notification_rome_founding_title">Hodie Urbs condita commemoratur</string>
+    <string name="background_color_title">Fundi color</string>
+    <string name="background_transparency_title">Fundi perluciditas</string> <!-- Ere courte -->
 </resources>

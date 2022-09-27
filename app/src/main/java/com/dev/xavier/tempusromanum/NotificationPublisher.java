@@ -187,7 +187,7 @@ public class NotificationPublisher extends BroadcastReceiver {
      */
     private String getMonthLabel(Context context, int monthNumber) {
         try {
-            int resourceId = context.getResources().getIdentifier("month_" + monthNumber, "string", context.getPackageName());
+            @SuppressLint("DiscouragedApi") int resourceId = context.getResources().getIdentifier("month_" + monthNumber, "string", context.getPackageName());
             return LocaleHelper.getLocaleStringResource(resourceId, context);
         } catch (Exception e) {
             return "";
