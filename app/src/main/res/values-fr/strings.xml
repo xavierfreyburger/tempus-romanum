@@ -44,7 +44,7 @@ limitations under the License.
     <string name="font_size_title">Taille de la police</string>
     <string name="text_copied_to_clipboard">Le texte à été copié dans le presse-papier</string>
     <string name="title_activity_settings">Paramètres</string>
-    <string name="widget_font_header">Police de caractère du widget</string>
+    <string name="widget_font_header">Widget</string>
     <string name="year_reference_anno_domini">"Jésus-Christ "</string>
     <string name="year_reference_rome_fondation">Fondation de Rome</string>
     <string name="force_latin_header">Langue</string>
@@ -109,4 +109,6 @@ limitations under the License.
     <string name="month_12">de décembre</string>
     <string name="current_nones_title">Nones</string>
     <string name="current_ides_title">Ides</string>
+    <string name="background_color_title">Couleur de l\'arrière plan</string>
+    <string name="background_transparency_title">Transparence de l\'arrière plan</string>
 </resources>

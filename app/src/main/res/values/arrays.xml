@@ -123,6 +123,17 @@ limitations under the License.
         <item>colorPurple</item>
     </string-array>
 
+    <!-- Background colors arrays -->
+    <string-array name="background_color_entries">
+        <item>@string/color_black</item>
+        <item>@string/color_white</item>
+    </string-array>
+
+    <string-array name="background_color_values">
+        <item>colorBlack</item>
+        <item>colorWhite</item>
+    </string-array>
+
     <!-- Year references arrays -->
     <string-array name="date_year_reference_entries">
         <item>@string/year_reference_anno_domini</item>

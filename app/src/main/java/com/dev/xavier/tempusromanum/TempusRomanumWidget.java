@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -51,6 +52,15 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         final int colorResId = context.getResources().getIdentifier(colorName, "color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
+        // 1.3 Background color
+        final String backgroundColorName = pref.getString(context.getString(R.string.saved_background_color), context.getString(R.string.default_background_color));
+        final int backgroundColorResId = context.getResources().getIdentifier(backgroundColorName, "color", context.getPackageName());
+        final int backgroundColor = ContextCompat.getColor(context, backgroundColorResId);
+
+        // 1.4 Background transparency ratio (value is actually stored as opacity [0-100] we need to transforme it to transparency)
+        final int backgroundTransparency = 100 - pref.getInt(context.getString(R.string.saved_background_transparency), Integer.parseInt(context.getString(R.string.default_background_transparency)));
+        final float backgroundTransparencyRatio = backgroundTransparency / (float) 100;
+
         // 2.1 Sentence mode
         final boolean sentenceMode = pref.getBoolean(context.getString(R.string.saved_date_sentence_mode), Boolean.parseBoolean(context.getString(R.string.default_date_sentence_mode)));
 
@@ -89,11 +99,14 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
+
         views.setTextViewText(R.id.appwidget_text, widgetText);
         // Set font size
         views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP, fontSize);
         // Set font color
         views.setTextColor(R.id.appwidget_text, fontColor);
+        // Set background color with transparency
+        views.setInt(R.id.appwidget_text, "setBackgroundColor", getColorWithAlpha(backgroundColor, backgroundTransparencyRatio));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -119,6 +132,16 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+    }
+
+    private static int getColorWithAlpha(int color, float ratio) {
+        int newColor = 0;
+        int alpha = Math.round(Color.alpha(color) * ratio);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        newColor = Color.argb(alpha, r, g, b);
+        return newColor;
     }
 }
 

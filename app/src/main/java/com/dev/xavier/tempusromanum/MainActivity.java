@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             case "shorten_era":
             case "font_size":
             case "font_color":
+            case "background_color":
+            case "background_transparency":
                 updateWidget();
                 break;
             case "force_latin":
@@ -191,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             case "alert_ides":
                 // Mettre à jour les notifications
                 updateNotifications();
+                break;
+            default:
                 break;
         }
     }
