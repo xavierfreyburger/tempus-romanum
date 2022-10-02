@@ -27,10 +27,14 @@ limitations under the License.
     <string name="date_separator" translatable="false">/</string>
     <string name="latin_locale_code" translatable="false">la</string>
     <string name="number_error">This number is wrong</string>
-    <string name="notification_channel" translatable="false">TempusRomanumChannel</string>
+    <string name="notification_channel" translatable="false">Tempus Romanum</string>
     <string name="notification_switch" translatable="false">notify</string>
     <string name="nones_label">Nones: </string>
     <string name="ides_label">Ides: </string>
+    <string name="request_permission_notifications">Notifications are disabled.\nPlease accept the permission request on the next screen to re-enable them.</string>
+    <string name="notification_premission_error">Notifications are disabled in system settings</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Notifications strings -->
     <string name="notification_nones_title">"Today it's the nones "</string>

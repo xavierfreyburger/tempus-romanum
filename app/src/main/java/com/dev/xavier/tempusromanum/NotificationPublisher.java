@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
@@ -136,7 +137,7 @@ public class NotificationPublisher extends BroadcastReceiver {
             // désactiver la répétition
             cancelRepeating();
         } else if (alarmMgr == null || alarmIntent == null) {
-            // Mettre en place la répétition automatique pour le lendemain
+            // Mettre en place la répétition automatique
             activateRepeating(context);
         }
     }
@@ -150,7 +151,7 @@ public class NotificationPublisher extends BroadcastReceiver {
     private void activateRepeating(Context context) {
         Intent intent = new Intent(context, NotificationPublisher.class);
         // The mutable PendingIntent object allows the system to add the EXTRA_ALARM_COUNT intent extra
-        if (android.os.Build.VERSION.SDK_INT >= 31) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         } else {
             alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -165,6 +166,10 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         // Mise en place de la répétition de l'alarme
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        // Pour tests, alarme dans 10s
+        //alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10 * 1000, alarmIntent);
+
     }
 
     /**

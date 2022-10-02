@@ -111,5 +111,9 @@ limitations under the License.
     <string name="ides_header">Iduum dies</string>
     <string name="notification_rome_founding_title">Hodie Urbs condita commemoratur</string>
     <string name="background_color_title">Fundi color</string>
-    <string name="background_transparency_title">Fundi perluciditas</string> <!-- Ere courte -->
+    <string name="background_transparency_title">Fundi perluciditas</string>
+    <string name="request_permission_notifications">Annuntationes nunc silent.\nAccipe quaeso licentiae postulationem sequenti in ostentore ut eae rursus agant.</string>
+    <string name="ok">Confirma</string>
+    <string name="cancel">Abroga</string>
+    <string name="notification_premission_error">Systematis parametri annuntationes vetant</string> <!-- Ere courte -->
 </resources>

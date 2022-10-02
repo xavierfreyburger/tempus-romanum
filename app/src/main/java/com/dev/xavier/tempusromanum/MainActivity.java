@@ -1,5 +1,6 @@
 package com.dev.xavier.tempusromanum;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,8 +9,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -21,8 +26,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -58,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private boolean customDate = false;
     private boolean lockTextWatcher = false;
     private boolean romanNumber = false;
-
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         NotificationChannel channel = new NotificationChannel(name, name, NotificationManager.IMPORTANCE_DEFAULT); // L'importance ne pourra plus être modifiée par la suite
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+
+        // Gérer le cas ou les notifications sont désactivée pour les versions d'Android avant 13
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (!notificationManager.areNotificationsEnabled()) {
+                disableNotificationsPreferences();
+            }
+        }
 
         // Initialisation des contrôles
         outputDate = findViewById(R.id.outputDate);
@@ -141,6 +158,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Mise en place du listener des paramètres
         setupSharedPreferences();
+
+        // Listener retour du dialogue système d'autorisation des notifications
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher = registerForActivityResult(new RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    // Désactiver les options de notification dans les préférences
+                    disableNotificationsPreferences();
+                }
+            });
+        }
+        
+        // Tester que l'autorisation aux notifications est donnée sinon désactiver les notifications
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            grantNotifications();
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            // Les notifications sont désactivées dans les paramètres système
+            disableNotificationsPreferences();
+        }
     }
 
     @Override
@@ -181,12 +216,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             case "font_color":
             case "background_color":
             case "background_transparency":
+                // Mettre à jour le widget
                 updateWidget();
-                break;
-            case "force_latin":
-                // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
                 break;
             case "alert_rome_founding":
             case "alert_nones":
@@ -226,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onPause();
 
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = mPrefs.edit();
+        Editor ed = mPrefs.edit();
         ed.putBoolean("customDate", customDate);
         if (customDate) {
             ed.putString("day", dayEditText.getText().toString());
@@ -514,11 +545,68 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         yearEditText.setError(getString(R.string.number_error));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void grantNotifications() {
+        // Si au moins une options activées, demander l'autorisation
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
+        final boolean nonesAlert = pref.getBoolean("alert_nones", false);
+        final boolean idesAlert = pref.getBoolean("alert_ides", false);
+        if ((romeFoundationAlert || nonesAlert || idesAlert) && requestPermissionLauncher != null ) {
+            // Vérifier s'il faut demander l'autorisation l'utilisateur
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                // L'autorisation est déjà accordée
+                return;
+            }
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // L'autorisation a été révoquée, proposer une explication pour le convaincre l'utilisateur d'accepter l'autorisation à nouveau
+                showMessageOKCancel(getString(R.string.request_permission_notifications),
+                        (dialog, which) -> requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS));
+            } else {
+                // Demander l'autorisation
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
     private void updateNotifications() {
         // Appeller NotificationPublisher
         Intent intent = new Intent(this, NotificationPublisher.class);
         intent.putExtra(getString(R.string.notification_switch), false);
         sendBroadcast(intent);
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.ok), okListener)
+                .setNegativeButton(getString(R.string.cancel), null)
+                .create()
+                .show();
+    }
+
+    private void disableNotificationsPreferences() {
+        boolean change = false;
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor prefEditor = pref.edit();
+
+        if(pref.getBoolean("alert_rome_founding", false)) {
+            prefEditor.putBoolean("alert_rome_founding", false);
+            change = true;
+        }
+        if(pref.getBoolean("alert_nones", false)) {
+            prefEditor.putBoolean("alert_nones", false);
+            change = true;
+        }
+        if(pref.getBoolean("alert_ides", false)) {
+            prefEditor.putBoolean("alert_ides", false);
+            change = true;
+        }
+
+        if(change) {
+            // Sauvegarder les changements
+            prefEditor.apply();
+        }
     }
 
     /*
