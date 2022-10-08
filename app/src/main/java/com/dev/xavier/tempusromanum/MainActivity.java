@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Tester que l'autorisation aux notifications est donnée sinon désactiver les notifications
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             grantNotifications();
-        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+        } else if (!getSystemService(NotificationManager.class).areNotificationsEnabled()) {
             // Les notifications sont désactivées dans les paramètres système
             disableNotificationsPreferences();
         }
