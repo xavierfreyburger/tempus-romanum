@@ -111,8 +111,9 @@ limitations under the License.
     <string name="current_ides_title">Ides</string>
     <string name="background_color_title">Couleur de l\'arrière plan</string>
     <string name="background_transparency_title">Transparence de l\'arrière plan</string>
-    <string name="request_permission_notifications">Les notifications sont désactivées. Veuillez accepter la demande de permission sur l\'écran suivant pour les réactiver.</string>
+    <string name="request_permission_notifications">Les notifications sont désactivées.\nVeuillez accepter la demande de permission sur l\'écran suivant pour les réactiver.</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="notification_premission_error">Les notifications sont désactivées dans les paramètres système</string>
+    <string name="request_permission_notifications_channel">Le canal de notification est désactivé.\nVeuillez l\'activer sur l\'écran suivant.</string>
 </resources>

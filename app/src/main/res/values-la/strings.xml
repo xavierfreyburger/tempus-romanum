@@ -115,5 +115,6 @@ limitations under the License.
     <string name="request_permission_notifications">Annuntationes nunc silent.\nAccipe quaeso licentiae postulationem sequenti in ostentore ut eae rursus agant.</string>
     <string name="ok">Confirma</string>
     <string name="cancel">Abroga</string>
-    <string name="notification_premission_error">Systematis parametri annuntationes vetant</string> <!-- Ere courte -->
+    <string name="notification_premission_error">Systematis parametri annuntationes vetant</string>
+    <string name="request_permission_notifications_channel">Annuntationis canalis prohibetur.\nAperi quaeso eum sequenti in ostentore.</string>
 </resources>

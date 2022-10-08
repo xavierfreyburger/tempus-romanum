@@ -32,6 +32,7 @@ limitations under the License.
     <string name="nones_label">Nones: </string>
     <string name="ides_label">Ides: </string>
     <string name="request_permission_notifications">Notifications are disabled.\nPlease accept the permission request on the next screen to re-enable them.</string>
+    <string name="request_permission_notifications_channel">Notification channel is disabled.\nPlease enable it on the next screen.</string>
     <string name="notification_premission_error">Notifications are disabled in system settings</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

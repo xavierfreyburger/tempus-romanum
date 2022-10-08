@@ -70,6 +70,10 @@ public class NotificationPublisher extends BroadcastReceiver {
      * @param context context
      */
     private void sendNotification(Context context) {
+        // Si les notifications sont désactivées dans les paramètres système, ne rien faire
+        if( !NotificationPermissionHelper.areNotificationsEnabled(context)) {
+            return;
+        }
         // Récupération du parmétrage des notifications
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
@@ -169,7 +173,6 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         // Pour tests, alarme dans 10s
         //alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10 * 1000, alarmIntent);
-
     }
 
     /**
