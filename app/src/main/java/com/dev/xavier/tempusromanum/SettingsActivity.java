@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager;
  */
 public class SettingsActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
+    private final static String SCROLL_TO_KEY = "scrollTo";
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private SettingsFragment settingsFragment;
 
@@ -57,6 +58,15 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
         // Si nécessaire enregistrer le launcher de demande de permission système
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, true);
+        }
+
+        // Scroll to option key if asked to
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            String key = b.getString(SCROLL_TO_KEY);
+            if (key != null) {
+                settingsFragment.scrollToPreference(key);
+            }
         }
     }
 
@@ -92,7 +102,8 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
             }
             case "force_latin":
                 // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
-                reloadActivity();
+                // puis scroller jusqu'à l'option pour le confort utilisateur
+                reloadActivity(key);
                 break;
             default:
                 break;
@@ -104,9 +115,18 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    private void reloadActivity() {
-        // Recreate
-        startActivity(Intent.makeRestartActivityTask(getIntent().getComponent()));
+    /**
+     * Recharger complètement la vue
+     * @param scrollTopreferenceKey Key de l'option jusqu'à laquelle il faudra scroller à l'initialisation de la vue
+     */
+    private void reloadActivity(String scrollTopreferenceKey) {
+        Intent intent = Intent.makeRestartActivityTask(getIntent().getComponent());
+        if(scrollTopreferenceKey != null) {
+            // Préciser la clé de l'option jusqu'à laquelle il faudra scroller à l'affichage de la vue
+            intent.putExtra(SCROLL_TO_KEY, scrollTopreferenceKey);
+        }
+        // Recréer la vue
+        startActivity(intent);
     }
 
     @Override
