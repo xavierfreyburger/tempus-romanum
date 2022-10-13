@@ -22,6 +22,8 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.concurrent.Callable;
+
 /**
  * Copyright 2022 Xavier Freyburger
  * <p>
@@ -63,15 +65,15 @@ class NotificationPermissionHelper {
      * @param context context
      * @param requestPermissionLauncher demande de permission
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
+     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
      */
-    public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, boolean editValueInSettingsFragment) {
+    public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Vérifier et demander si nécessaire la permission à l'utilisateur d'envoyer des notifications
             grantNotifications(context, requestPermissionLauncher);
         } else if (!context.getSystemService(NotificationManager.class).areNotificationsEnabled()) {
             // Les notifications sont désactivées dans les paramètres système
-            disableNotificationsPreferences(context, notify, editValueInSettingsFragment);
+            disableNotificationsPreferences(context, notify, buildInPreferencesDisabler);
         }
 
         // Vérification que le chanel Tempus Romanum est actif
@@ -142,14 +144,18 @@ class NotificationPermissionHelper {
      * Désactive les notifications dans les préférences de l'application
      * @param context context
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
+     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
      */
-    private static void disableNotificationsPreferences(Context context, boolean notify, boolean editValueInSettingsFragment) {
+    private static void disableNotificationsPreferences(Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         boolean change = false;
 
-        if(editValueInSettingsFragment && context instanceof SettingsActivity) {
-            change = ((SettingsActivity) context).disableNotificationInSettingsFragment();
+        if(buildInPreferencesDisabler != null) {
+            // Désactiver les préférences de notifications avec la méthode fournie en paramètres
+            try {
+                change = buildInPreferencesDisabler.call();
+            } catch (Exception ignored) {}
         } else {
+            // Désactiver les préférence de notifications avec la méthode standard
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor prefEditor = pref.edit();
 
@@ -172,7 +178,7 @@ class NotificationPermissionHelper {
         }
 
         if(change && notify) {
-            // Avertir que le système empèche l'activation des notifications
+            // Avertir que le système empèche l'activation des notifications dans une Snackbar au bas de l'écran
             Snackbar.make(((Activity)context).findViewById(android.R.id.content), context.getString(R.string.notification_premission_error), Snackbar.LENGTH_LONG).show();
         }
     }
@@ -182,15 +188,15 @@ class NotificationPermissionHelper {
      * Si négatif désactive les notifications de l'application
      * @param context context
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
+     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
      * @return ActivityResultLauncher<String> demande de permission
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public static ActivityResultLauncher<String> registerPermissionLauncher(Context context, boolean notify, boolean editValueInSettingsFragment) {
+    public static ActivityResultLauncher<String> registerPermissionLauncher(Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         return ((AppCompatActivity)context).registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (!isGranted) {
                 // Désactiver les options de notification dans les préférences
-                disableNotificationsPreferences(context, notify, editValueInSettingsFragment);
+                disableNotificationsPreferences(context, notify, buildInPreferencesDisabler);
             }
         });
     }
@@ -205,8 +211,7 @@ class NotificationPermissionHelper {
         if ( requestPermissionLauncher != null ) {
             try {
                 requestPermissionLauncher.unregister();
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 }

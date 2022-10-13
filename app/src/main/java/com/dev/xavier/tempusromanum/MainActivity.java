@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Listener retour du dialogue système d'autorisation des notifications
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, false, false);
+            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, false, null);
         }
     }
 
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         updateDate();
 
         // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,false, false);
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,false, null);
     }
 
     @Override

@@ -57,10 +57,10 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
 
         // Si nécessaire enregistrer le launcher de demande de permission système
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, true);
+            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, this::disableNotificationInSettingsFragment);
         }
 
-        // Scroll to option key if asked to
+        // Si demandé, scroller jusqu'à l'option demandée
         Bundle b = getIntent().getExtras();
         if(b != null) {
             String key = b.getString(SCROLL_TO_KEY);
@@ -74,7 +74,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
     protected void onResume() {
         super.onResume();
         // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, true);
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, this::disableNotificationInSettingsFragment);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
             case "alert_ides": {
                 // Test la permission aux notifications
                 if(sharedPreferences.getBoolean(key, false)) {
-                    NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, true);
+                    NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher, true, this::disableNotificationInSettingsFragment);
                 }
                 break;
             }
@@ -144,7 +144,7 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
      * Désactive les notifications directement au niveau des boutons
      * @return boolean Vrai si l'état d'un bouton a été modifié, faux sinon
      */
-    public boolean disableNotificationInSettingsFragment() {
+    private boolean disableNotificationInSettingsFragment() {
         return settingsFragment.disableNotification();
     }
 }
