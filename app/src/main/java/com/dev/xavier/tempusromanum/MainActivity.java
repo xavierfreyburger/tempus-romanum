@@ -144,9 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, false, false);
         }
-
-        // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,false, false);
     }
 
     @Override
@@ -282,6 +279,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             lockTextWatcher = false;
         }
         updateDate();
+
+        // Tester la permission au notifications
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,false, false);
     }
 
     @Override

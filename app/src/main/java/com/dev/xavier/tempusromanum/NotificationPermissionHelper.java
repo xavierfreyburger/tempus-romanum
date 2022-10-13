@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,6 +19,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Copyright 2022 Xavier Freyburger
@@ -61,16 +62,16 @@ class NotificationPermissionHelper {
      * Vérifie l'autorisation au notification, si nécessaire essaye de les obtenir ou désactive l'option de notification
      * @param context context
      * @param requestPermissionLauncher demande de permission
-     * @param notify s'il faut notifier l'utilisateur dans un Toast
-     * @param reloadActivity s'il faut relancer l'activité courante
+     * @param notify s'il faut notifier l'utilisateur dans une Snackbar
+     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
      */
-    public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, boolean reloadActivity) {
+    public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, boolean editValueInSettingsFragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Vérifier et demander si nécessaire la permission à l'utilisateur d'envoyer des notifications
             grantNotifications(context, requestPermissionLauncher);
         } else if (!context.getSystemService(NotificationManager.class).areNotificationsEnabled()) {
             // Les notifications sont désactivées dans les paramètres système
-            disableNotificationsPreferences(context, notify, reloadActivity);
+            disableNotificationsPreferences(context, notify, editValueInSettingsFragment);
         }
 
         // Vérification que le chanel Tempus Romanum est actif
@@ -140,39 +141,39 @@ class NotificationPermissionHelper {
     /**
      * Désactive les notifications dans les préférences de l'application
      * @param context context
-     * @param notify s'il faut notifier l'utilisateur dans un Toast
-     * @param reloadActivity s'il faut relancer l'activité courante
+     * @param notify s'il faut notifier l'utilisateur dans une Snackbar
+     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
      */
-    private static void disableNotificationsPreferences(Context context, boolean notify, boolean reloadActivity) {
+    private static void disableNotificationsPreferences(Context context, boolean notify, boolean editValueInSettingsFragment) {
         boolean change = false;
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor prefEditor = pref.edit();
 
-        if(pref.getBoolean("alert_rome_founding", false)) {
-            prefEditor.putBoolean("alert_rome_founding", false);
-            change = true;
-        }
-        if(pref.getBoolean("alert_nones", false)) {
-            prefEditor.putBoolean("alert_nones", false);
-            change = true;
-        }
-        if(pref.getBoolean("alert_ides", false)) {
-            prefEditor.putBoolean("alert_ides", false);
-            change = true;
-        }
+        if(editValueInSettingsFragment && context instanceof SettingsActivity) {
+            change = ((SettingsActivity) context).disableNotificationInSettingsFragment();
+        } else {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor prefEditor = pref.edit();
 
-        if(change) {
-            // Sauvegarder les changements
-            prefEditor.apply();
-
-            if(notify) {
-                // Avertir que le système empèche l'activation des notifications
-                Toast.makeText(context, context.getString(R.string.notification_premission_error), Toast.LENGTH_LONG).show();
+            if (pref.getBoolean("alert_rome_founding", false)) {
+                prefEditor.putBoolean("alert_rome_founding", false);
+                change = true;
             }
-            if(reloadActivity) {
-                // Recharger la page pour prendre en compte les nouvelles valeurs
-                context.startActivity(Intent.makeRestartActivityTask( ((Activity)context).getIntent().getComponent()));
+            if (pref.getBoolean("alert_nones", false)) {
+                prefEditor.putBoolean("alert_nones", false);
+                change = true;
             }
+            if (pref.getBoolean("alert_ides", false)) {
+                prefEditor.putBoolean("alert_ides", false);
+                change = true;
+            }
+            if(change) {
+                // Sauvegarder les changements
+                prefEditor.apply();
+            }
+        }
+
+        if(change && notify) {
+            // Avertir que le système empèche l'activation des notifications
+            Snackbar.make(((Activity)context).findViewById(android.R.id.content), context.getString(R.string.notification_premission_error), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -180,16 +181,16 @@ class NotificationPermissionHelper {
      * Attache une action sur le retour d'une demande de permission aux notifications envoyée à l'utilisateur
      * Si négatif désactive les notifications de l'application
      * @param context context
-     * @param notify s'il faut notifier l'utilisateur dans un Toast
-     * @param reloadActivity s'il faut relancer l'activité courante
+     * @param notify s'il faut notifier l'utilisateur dans une Snackbar
+     * @param editValueInSettingsFragment s'il faut modifier la préférence directement au niveau du bouton dans les paramètres
      * @return ActivityResultLauncher<String> demande de permission
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public static ActivityResultLauncher<String> registerPermissionLauncher(Context context, boolean notify, boolean reloadActivity) {
+    public static ActivityResultLauncher<String> registerPermissionLauncher(Context context, boolean notify, boolean editValueInSettingsFragment) {
         return ((AppCompatActivity)context).registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (!isGranted) {
                 // Désactiver les options de notification dans les préférences
-                disableNotificationsPreferences(context, notify, reloadActivity);
+                disableNotificationsPreferences(context, notify, editValueInSettingsFragment);
             }
         });
     }

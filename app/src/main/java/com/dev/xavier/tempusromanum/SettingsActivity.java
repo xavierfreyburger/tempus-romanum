@@ -11,7 +11,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 /**
@@ -32,6 +31,7 @@ import androidx.preference.PreferenceManager;
 public class SettingsActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
     private ActivityResultLauncher<String> requestPermissionLauncher;
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,14 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
 
         setTitle(R.string.title_activity_settings);
         setContentView(R.layout.settings_activity);
+
+        settingsFragment = new SettingsFragment();
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
+                .replace(R.id.settings, settingsFragment)
                 .commit();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -50,18 +54,17 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
 
         setupSharedPreferences();
 
-        // Si nécessaire demander l'autorisation aux notifications
+        // Si nécessaire enregistrer le launcher de demande de permission système
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, true);
         }
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, true);
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Tester la permission au notifications
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, true);
     }
 
     @Override
@@ -115,5 +118,13 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             NotificationPermissionHelper.unregisterPermissionLauncher(requestPermissionLauncher);
         }
+    }
+
+    /**
+     * Désactive les notifications directement au niveau des boutons
+     * @return boolean Vrai si l'état d'un bouton a été modifié, faux sinon
+     */
+    public boolean disableNotificationInSettingsFragment() {
+        return settingsFragment.disableNotification();
     }
 }
