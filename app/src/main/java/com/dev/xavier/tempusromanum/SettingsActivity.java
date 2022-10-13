@@ -90,23 +90,10 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case "alert_rome_founding":
-            case "alert_nones":
-            case "alert_ides": {
-                // Test la permission aux notifications
-                if(sharedPreferences.getBoolean(key, false)) {
-                    NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher, true, this::disableNotificationInSettingsFragment);
-                }
-                break;
-            }
-            case "force_latin":
-                // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
-                // puis scroller jusqu'à l'option pour le confort utilisateur
-                reloadActivity(key);
-                break;
-            default:
-                break;
+        if ("force_latin".equals(key)) {
+            // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
+            // puis scroller jusqu'à l'option pour le confort utilisateur
+            reloadActivity(key);
         }
     }
 
@@ -146,5 +133,9 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
      */
     private boolean disableNotificationInSettingsFragment() {
         return settingsFragment.disableNotification();
+    }
+
+    public void checkNotificationPermissions() {
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher, true, this::disableNotificationInSettingsFragment);
     }
 }

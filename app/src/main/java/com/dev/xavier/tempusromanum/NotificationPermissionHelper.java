@@ -52,6 +52,11 @@ class NotificationPermissionHelper {
         notificationManager.createNotificationChannel(channel);
     }
 
+    /**
+     * @param context context
+     * @return Vrai si les notifications sont activées dans les paramètres système
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean areNotificationsEnabled(Context context) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
@@ -65,7 +70,7 @@ class NotificationPermissionHelper {
      * @param context context
      * @param requestPermissionLauncher demande de permission
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
+     * @param buildInPreferencesDisabler Si renseignée, méthode à appeler pour désactiver les notifications
      */
     public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -83,6 +88,16 @@ class NotificationPermissionHelper {
             showMessageOKCancel(context, context.getString(R.string.request_permission_notifications_channel) ,
                     (dialog, which) -> openSystemChannelSetting(context));
         }
+    }
+
+    /**
+     * Ouvre le menu de paramétrage système des notifications de l'application
+     * @param context context
+     */
+    private static void openSystemNotificationSetting(Context context) {
+        Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+        context.startActivity(intent);
     }
 
     /**
@@ -144,42 +159,29 @@ class NotificationPermissionHelper {
      * Désactive les notifications dans les préférences de l'application
      * @param context context
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
+     * @param buildInPreferencesDisabler Si renseignée, méthode à appeler pour désactiver les notifications
      */
     private static void disableNotificationsPreferences(Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         boolean change = false;
 
-        if(buildInPreferencesDisabler != null) {
-            // Désactiver les préférences de notifications avec la méthode fournie en paramètres
-            try {
-                change = buildInPreferencesDisabler.call();
-            } catch (Exception ignored) {}
-        } else {
-            // Désactiver les préférence de notifications avec la méthode standard
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor prefEditor = pref.edit();
-
-            if (pref.getBoolean("alert_rome_founding", false)) {
-                prefEditor.putBoolean("alert_rome_founding", false);
-                change = true;
-            }
-            if (pref.getBoolean("alert_nones", false)) {
-                prefEditor.putBoolean("alert_nones", false);
-                change = true;
-            }
-            if (pref.getBoolean("alert_ides", false)) {
-                prefEditor.putBoolean("alert_ides", false);
-                change = true;
-            }
-            if(change) {
-                // Sauvegarder les changements
-                prefEditor.apply();
+        // Détecter s'il faut désactiver quelque chose ou non
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (pref.getBoolean("alert_rome_founding", false) || pref.getBoolean("alert_nones", false) || pref.getBoolean("alert_ides", false)) {
+            change = true;
+            if (buildInPreferencesDisabler != null) {
+                // Effectuer les changements
+                try {
+                    change = buildInPreferencesDisabler.call();
+                } catch (Exception ignored) {
+                }
             }
         }
 
         if(change && notify) {
-            // Avertir que le système empèche l'activation des notifications dans une Snackbar au bas de l'écran
-            Snackbar.make(((Activity)context).findViewById(android.R.id.content), context.getString(R.string.notification_premission_error), Snackbar.LENGTH_LONG).show();
+            // Avertir que le système empèche l'activation des notifications dans une Snackbar au bas de l'écran et proposer l'accès rapide aux paramètres
+            Snackbar.make(((Activity)context).findViewById(android.R.id.content), context.getString(R.string.notification_premission_error), Snackbar.LENGTH_LONG)
+                    .setAction("Open", v -> openSystemNotificationSetting(context))
+                    .show();
         }
     }
 
@@ -188,7 +190,7 @@ class NotificationPermissionHelper {
      * Si négatif désactive les notifications de l'application
      * @param context context
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
-     * @param buildInPreferencesDisabler Si renseigné, méthode à appeler pour désactiver les notifications
+     * @param buildInPreferencesDisabler Si renseignée, méthode à appeler pour désactiver les notifications
      * @return ActivityResultLauncher<String> demande de permission
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)

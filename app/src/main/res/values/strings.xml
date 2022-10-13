@@ -36,6 +36,7 @@ limitations under the License.
     <string name="notification_premission_error">Notifications are disabled in system settings</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="open">Open</string>
 
     <!-- Notifications strings -->
     <string name="notification_nones_title">"Today it's the nones "</string>

@@ -116,4 +116,5 @@ limitations under the License.
     <string name="cancel">Annuler</string>
     <string name="notification_premission_error">Les notifications sont désactivées dans les paramètres système</string>
     <string name="request_permission_notifications_channel">Le canal de notification est désactivé.\nVeuillez l\'activer sur l\'écran suivant.</string>
+    <string name="open">Ouvrir</string>
 </resources>

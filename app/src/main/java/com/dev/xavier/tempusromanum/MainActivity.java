@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Bouton copier dans le presse-papier
         fab.setOnClickListener(view -> {
-            // On ne copie que la phase de la date, pas les indications optionnelles concernant les nones et les ides (elles sont séparées par un saut de ligne)
+            // On ne copie que la phrase de la date, pas les indications optionnelles concernant les nones et les ides (elles sont séparées par un saut de ligne)
             String txt = (String) outputDate.getText();
             if (txt == null) {
                 txt = "";
@@ -124,8 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("simple text", txt);
             clipboard.setPrimaryClip(clip);
-            Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, getString(R.string.text_copied_to_clipboard), Snackbar.LENGTH_LONG).show();
         });
 
         // Bouton reset date
@@ -133,8 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             // Forcer la date du jour
             customDate = false;
             updateDate(true);
-            Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, getString(R.string.date_reset), Snackbar.LENGTH_LONG).show();
         });
 
         // Mise en place du listener des paramètres
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Listener retour du dialogue système d'autorisation des notifications
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, false, null);
+            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, null);
         }
     }
 
@@ -281,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         updateDate();
 
         // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,false, null);
+        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, null);
     }
 
     @Override
