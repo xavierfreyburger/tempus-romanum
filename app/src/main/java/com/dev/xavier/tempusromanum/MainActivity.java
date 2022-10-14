@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -22,7 +21,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private boolean customDate = false;
     private boolean lockTextWatcher = false;
     private boolean romanNumber = false;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private boolean processingPermissionResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,11 +136,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Mise en place du listener des paramètres
         setupSharedPreferences();
-
-        // Listener retour du dialogue système d'autorisation des notifications
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, null);
-        }
     }
 
     @Override
@@ -201,10 +195,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         super.onDestroy();
 
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            NotificationPermissionHelper.unregisterPermissionLauncher(requestPermissionLauncher);
-        }
     }
 
     @Override
@@ -278,8 +268,24 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         }
         updateDate();
 
-        // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, null);
+        if(!processingPermissionResult) {
+            // Tester la permission au notifications
+            NotificationPermissionHelper.checkPermission(this, true, null);
+        } else {
+            // Désactivation du lock lié au résultat système de test des notifications
+            processingPermissionResult = false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == NotificationPermissionHelper.getRequestCode()) {
+            // onRequestPermissionsResult est appelé avant onResume, on peut donc mettre en place un lock
+            processingPermissionResult = true;
+            NotificationPermissionHelper.handlePermissionResult(grantResults, this, true, null);
+        }
     }
 
     @Override

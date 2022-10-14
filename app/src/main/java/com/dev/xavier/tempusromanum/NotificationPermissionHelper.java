@@ -12,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +38,12 @@ import java.util.concurrent.Callable;
  * limitations under the License.
  */
 class NotificationPermissionHelper {
+
+    private static final int REQUEST_CODE = 12345;
+
+    public static int getRequestCode() {
+        return REQUEST_CODE;
+    }
 
     /**
      * Initialisation du canal de communication des notifications
@@ -68,25 +72,27 @@ class NotificationPermissionHelper {
     /**
      * Vérifie l'autorisation au notification, si nécessaire essaye de les obtenir ou désactive l'option de notification
      * @param context context
-     * @param requestPermissionLauncher demande de permission
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
      * @param buildInPreferencesDisabler Si renseignée, méthode à appeler pour désactiver les notifications
      */
-    public static void checkPermission(Context context, ActivityResultLauncher<String> requestPermissionLauncher, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
+    public static void checkPermission(Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Vérifier et demander si nécessaire la permission à l'utilisateur d'envoyer des notifications
-            grantNotifications(context, requestPermissionLauncher);
+            grantNotifications(context);
         } else if (!context.getSystemService(NotificationManager.class).areNotificationsEnabled()) {
             // Les notifications sont désactivées dans les paramètres système
             disableNotificationsPreferences(context, notify, buildInPreferencesDisabler);
         }
 
-        // Vérification que le chanel Tempus Romanum est actif
-        NotificationChannel notificationChannel = context.getSystemService(NotificationManager.class).getNotificationChannel(context.getString(R.string.notification_channel));
-        if( notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
-            // Suggest user to enable notification chanel in system settings
-            showMessageOKCancel(context, context.getString(R.string.request_permission_notifications_channel) ,
-                    (dialog, which) -> openSystemChannelSetting(context));
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (pref.getBoolean("alert_rome_founding", false) || pref.getBoolean("alert_nones", false) || pref.getBoolean("alert_ides", false)) {
+            // Vérification que le chanel Tempus Romanum est actif
+            NotificationChannel notificationChannel = context.getSystemService(NotificationManager.class).getNotificationChannel(context.getString(R.string.notification_channel));
+            if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                // Suggest user to enable notification chanel in system settings
+                showMessageOKCancel(context, context.getString(R.string.request_permission_notifications_channel),
+                        (dialog, which) -> openSystemChannelSetting(context));
+            }
         }
     }
 
@@ -114,16 +120,15 @@ class NotificationPermissionHelper {
     /**
      * Si nécessaire demande la permission des notifications à l'utilisateur
      * @param context context
-     * @param requestPermissionLauncher demande de permission
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private static void grantNotifications(Context context, ActivityResultLauncher<String> requestPermissionLauncher) {
+    private static void grantNotifications(Context context) {
         // Si au moins une options activées, demander l'autorisation
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         final boolean romeFoundationAlert = pref.getBoolean("alert_rome_founding", false);
         final boolean nonesAlert = pref.getBoolean("alert_nones", false);
         final boolean idesAlert = pref.getBoolean("alert_ides", false);
-        if ((romeFoundationAlert || nonesAlert || idesAlert) && requestPermissionLauncher != null ) {
+        if ((romeFoundationAlert || nonesAlert || idesAlert) && context instanceof AppCompatActivity ) {
             // Vérifier s'il faut demander l'autorisation l'utilisateur
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                 // L'autorisation est déjà accordée
@@ -132,12 +137,21 @@ class NotificationPermissionHelper {
             if ( ((Activity)context).shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 // L'autorisation a été révoquée, proposer une explication pour le convaincre l'utilisateur d'accepter l'autorisation à nouveau
                 showMessageOKCancel(context, context.getString(R.string.request_permission_notifications),
-                        (dialog, which) -> requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS));
+                        (dialog, which) -> requestPermission((AppCompatActivity)context));
             } else {
                 // Demander l'autorisation
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                requestPermission((AppCompatActivity)context);
             }
         }
+    }
+
+    /**
+     * Lance une demande de permission dont la réponse sera évaluée par l'activité en paramètre
+     * @param activity Activité qui recevera la réponse
+     */
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private static void requestPermission(AppCompatActivity activity) {
+        activity.requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE);
     }
 
     /**
@@ -180,40 +194,22 @@ class NotificationPermissionHelper {
         if(change && notify) {
             // Avertir que le système empèche l'activation des notifications dans une Snackbar au bas de l'écran et proposer l'accès rapide aux paramètres
             Snackbar.make(((Activity)context).findViewById(android.R.id.content), context.getString(R.string.notification_premission_error), Snackbar.LENGTH_LONG)
-                    .setAction("Open", v -> openSystemNotificationSetting(context))
+                    .setAction(context.getString(R.string.open), v -> openSystemNotificationSetting(context))
                     .show();
         }
     }
 
     /**
-     * Attache une action sur le retour d'une demande de permission aux notifications envoyée à l'utilisateur
-     * Si négatif désactive les notifications de l'application
+     * Traite le retour d'une demande de permission de notification
+     * @param grantResults int[] tableau de reponses au demandes de notifications
      * @param context context
      * @param notify s'il faut notifier l'utilisateur dans une Snackbar
      * @param buildInPreferencesDisabler Si renseignée, méthode à appeler pour désactiver les notifications
-     * @return ActivityResultLauncher<String> demande de permission
      */
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public static ActivityResultLauncher<String> registerPermissionLauncher(Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
-        return ((AppCompatActivity)context).registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (!isGranted) {
-                // Désactiver les options de notification dans les préférences
-                disableNotificationsPreferences(context, notify, buildInPreferencesDisabler);
-            }
-        });
-    }
-
-    /**
-     * Détache l'action sur le retour d'une demande de permission aux notifications envoyée à l'utilisateur
-     * @param requestPermissionLauncher demande de permission
-     */
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public static void unregisterPermissionLauncher(ActivityResultLauncher<String> requestPermissionLauncher)
-    {
-        if ( requestPermissionLauncher != null ) {
-            try {
-                requestPermissionLauncher.unregister();
-            } catch (Exception ignored) {}
+    public static void handlePermissionResult(int[] grantResults, Context context, boolean notify, Callable<Boolean> buildInPreferencesDisabler) {
+        if(!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            // Désactiver les options de notification dans les préférences
+            disableNotificationsPreferences(context, notify, buildInPreferencesDisabler);
         }
     }
 }

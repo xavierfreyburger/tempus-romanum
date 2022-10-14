@@ -2,16 +2,15 @@ package com.dev.xavier.tempusromanum;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
-import androidx.preference.PreferenceManager;
+import androidx.core.app.TaskStackBuilder;
+
+import java.util.Objects;
 
 /**
  * Copyright 2019 Xavier Freyburger
@@ -28,11 +27,11 @@ import androidx.preference.PreferenceManager;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class SettingsActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity {
 
     private final static String SCROLL_TO_KEY = "scrollTo";
-    private ActivityResultLauncher<String> requestPermissionLauncher;
     private SettingsFragment settingsFragment;
+    private boolean processingPermissionsResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +47,8 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
                 .replace(R.id.settings, settingsFragment)
                 .commit();
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        setupSharedPreferences();
-
-        // Si nécessaire enregistrer le launcher de demande de permission système
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher = NotificationPermissionHelper.registerPermissionLauncher(this, true, this::disableNotificationInSettingsFragment);
-        }
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         // Si demandé, scroller jusqu'à l'option demandée
         Bundle b = getIntent().getExtras();
@@ -73,8 +63,44 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
     @Override
     protected void onResume() {
         super.onResume();
-        // Tester la permission au notifications
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher,true, this::disableNotificationInSettingsFragment);
+
+        if(!processingPermissionsResult) {
+            // Tester la permission au notifications
+            NotificationPermissionHelper.checkPermission(this, true, this::disableNotificationInSettingsFragment);
+        } else {
+            // Désactivation du lock lié au résultat système de test des notifications
+            processingPermissionsResult = false;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Retour sur MainActivity lors de l'appui sur le bouton retour du menu
+            // Nécessaire en cas de mise en arrière plan alors que le menu des options est affiché
+            final Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (upIntent != null) {
+                if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
+                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+                } else {
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == NotificationPermissionHelper.getRequestCode()) {
+            // onRequestPermissionsResult est appelé avant onResume, on peut donc mettre en place un lock
+            processingPermissionsResult = true;
+            NotificationPermissionHelper.handlePermissionResult(grantResults, this, true, this::disableNotificationInSettingsFragment);
+        }
     }
 
     @Override
@@ -88,25 +114,11 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if ("force_latin".equals(key)) {
-            // Recharger la vue des paramètres pour que le changement de langue soit pris en compte
-            // puis scroller jusqu'à l'option pour le confort utilisateur
-            reloadActivity(key);
-        }
-    }
-
-    private void setupSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
     /**
      * Recharger complètement la vue
      * @param scrollTopreferenceKey Key de l'option jusqu'à laquelle il faudra scroller à l'initialisation de la vue
      */
-    private void reloadActivity(String scrollTopreferenceKey) {
+    public void reloadActivity(String scrollTopreferenceKey) {
         Intent intent = Intent.makeRestartActivityTask(getIntent().getComponent());
         if(scrollTopreferenceKey != null) {
             // Préciser la clé de l'option jusqu'à laquelle il faudra scroller à l'affichage de la vue
@@ -114,17 +126,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
         }
         // Recréer la vue
         startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            NotificationPermissionHelper.unregisterPermissionLauncher(requestPermissionLauncher);
-        }
     }
 
     /**
@@ -136,6 +137,6 @@ public class SettingsActivity extends AppCompatActivity implements OnSharedPrefe
     }
 
     public void checkNotificationPermissions() {
-        NotificationPermissionHelper.checkPermission(this, requestPermissionLauncher, true, this::disableNotificationInSettingsFragment);
+        NotificationPermissionHelper.checkPermission(this, true, this::disableNotificationInSettingsFragment);
     }
 }
