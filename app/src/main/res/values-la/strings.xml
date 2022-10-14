@@ -117,4 +117,5 @@ limitations under the License.
     <string name="cancel">Abroga</string>
     <string name="notification_premission_error">Systematis parametri annuntationes vetant</string>
     <string name="request_permission_notifications_channel">Annuntationis canalis prohibetur.\nAperi quaeso eum sequenti in ostentore.</string>
+    <string name="open">Aperire</string>
 </resources>
