@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             // Open settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+
             return true;
         }
 

@@ -33,7 +33,7 @@ limitations under the License.
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask" />
 
         <receiver android:name=".TempusRomanumWidget"
             android:exported="false">
@@ -56,7 +56,7 @@ limitations under the License.
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
