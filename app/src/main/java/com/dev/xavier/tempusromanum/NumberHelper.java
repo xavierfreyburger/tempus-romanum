@@ -50,7 +50,7 @@ class NumberHelper {
 
 
     static Integer decimal(String nombreRomain) throws NumberFormatException {
-        if (nombreRomain == null || nombreRomain.length() == 0) {
+        if (nombreRomain == null || nombreRomain.isEmpty()) {
             return null;
         }
         int value = 0;

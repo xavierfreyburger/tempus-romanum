@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * Copyright 2021 Xavier Freyburger
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        switch (key) {
+        switch (Objects.requireNonNull(key)) {
             case "sentence_mode":
             case "week_day_display":
             case "year_display":
@@ -298,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private void prefNumberValueRetriever(SharedPreferences pref, String key, EditText editText) {
         String value = pref.getString(key, null);
 
-        if (value != null && value.length() > 0) {
+        if (value != null && !value.isEmpty()) {
             if (romanNumber) {
                 if (!NumberHelper.isRoman(value.charAt(0))) {
                     value = Calendarium.romanusNumerus(Integer.parseInt(value));

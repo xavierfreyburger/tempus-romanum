@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Copyright 2021 Xavier Freyburger
@@ -53,7 +54,7 @@ public class NotificationPublisher extends BroadcastReceiver {
 
             // 2. Analyse des Extras, si notity == false -> mettre en place la répétition automatique
             // Récupération du paramétrage d'affichage de la notification
-            final boolean notify = intent.getExtras().getBoolean(context.getString(R.string.notification_switch), true);
+            final boolean notify = Objects.requireNonNull(intent.getExtras()).getBoolean(context.getString(R.string.notification_switch), true);
             if (!notify) {
                 setupRepeating(context);
                 return;
