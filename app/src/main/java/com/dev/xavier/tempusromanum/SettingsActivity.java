@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
@@ -58,7 +59,18 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsFragment.scrollToPreference(key);
             }
         }
+
+        // Ajout d'un callback sur bouton retour "system"
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                this.setEnabled(false);
+                doBackAction();
+            }
+        });
     }
+
+
 
     @Override
     protected void onResume() {
@@ -109,10 +121,16 @@ public class SettingsActivity extends AppCompatActivity {
         super.attachBaseContext(LocaleHelper.updateLanguage(base));
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        NavUtils.navigateUpFromSameTask(this);
+    /**
+     * Appelle manuellement la page principale de l'application, si possible sans la recharger de 0
+     * Termine l'activité actuelle
+     * (Équivalent du bouton retour)
+     */
+    private void doBackAction() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
+        finish();
     }
 
     /**
