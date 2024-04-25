@@ -23,17 +23,17 @@ limitations under the License.
 
     <!-- Couleurs du widget -->
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorGrayLight">#D3D3D3</color>
-    <color name="colorGray">#808080</color>
+    <color name="colorGrayLight">#AAAAAA</color>
+    <color name="colorGray">#616161</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorBlueLight">#87CEFA</color>
-    <color name="colorBlueDeep">#00BFFF</color>
-    <color name="colorBlueDark">#1E90FF</color>
-    <color name="colorGreenLight">#7FFF00</color>
-    <color name="colorGreenDark">#006400</color>
-    <color name="colorRedLight">#DC143C</color>
-    <color name="colorRedDark">#8B0000</color>
-    <color name="colorOrangeLight">#FFD700</color>
-    <color name="colorOrangeDark">#FFA500</color>
-    <color name="colorPurple">#9370DB</color>
+    <color name="colorBlueLight">#00BCD4</color>
+    <color name="colorBlueDeep">#2196F3</color>
+    <color name="colorBlueDark">#3F51B5</color>
+    <color name="colorGreenLight">#4CAF50</color>
+    <color name="colorGreenDark">#009688</color>
+    <color name="colorRedLight">#F44336</color>
+    <color name="colorRedDark">#B71C1C</color>
+    <color name="colorOrangeLight">#FF9800</color>
+    <color name="colorOrangeDark">#FF5722</color>
+    <color name="colorPurple">#9C27B0</color>
 </resources>
