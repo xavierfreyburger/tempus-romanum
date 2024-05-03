@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Days of month array -->
     <string-array name="days_of_month">
         <item>@string/num_1</item>
@@ -89,7 +89,7 @@ limitations under the License.
     </string-array>
 
     <!-- Font colors arrays -->
-    <string-array name="font_color_entries">
+    <string-array name="font_color_entries" tools:ignore="InconsistentArrays">
         <item>@string/color_white</item>
         <item>@string/color_gray_light</item>
         <item>@string/color_gray</item>
@@ -106,7 +106,7 @@ limitations under the License.
         <item>@string/color_purple</item>
     </string-array>
 
-    <string-array name="font_color_values">
+    <string-array name="font_color_values" tools:ignore="InconsistentArrays">
         <item>colorWhite</item>
         <item>colorGrayLight</item>
         <item>colorGray</item>
@@ -124,12 +124,12 @@ limitations under the License.
     </string-array>
 
     <!-- Background colors arrays -->
-    <string-array name="background_color_entries">
+    <string-array name="background_color_entries" tools:ignore="InconsistentArrays">
         <item>@string/color_black</item>
         <item>@string/color_white</item>
     </string-array>
 
-    <string-array name="background_color_values">
+    <string-array name="background_color_values" tools:ignore="InconsistentArrays">
         <item>colorBlack</item>
         <item>colorWhite</item>
     </string-array>

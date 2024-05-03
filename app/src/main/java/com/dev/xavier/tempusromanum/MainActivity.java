@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         // Mise en place du listener des paramètres
         setupSharedPreferences();
+
+        // Demander la mise à jour du Widget
+        updateWidget();
     }
 
     @Override
@@ -193,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 

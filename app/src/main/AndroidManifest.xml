@@ -29,6 +29,7 @@ limitations under the License.
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         tools:targetApi="s">
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"

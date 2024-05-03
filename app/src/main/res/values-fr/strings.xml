@@ -30,6 +30,8 @@ limitations under the License.
     <string name="color_purple">Violet</string>
     <string name="color_red_dark">Rouge foncé</string>
     <string name="color_red_light">Rouge clair</string>
+    <string name="color_auto_foreground">Système</string>
+    <string name="color_auto_background">Système</string>
     <string name="color_white">Blanc</string>
     <string name="date_header">Rendu de la date</string>
     <string name="date_reset">La date à été réinitialisée</string>

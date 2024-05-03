@@ -1,0 +1,66 @@
+<!--
+Copyright 2024 Xavier Freyburger
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Font colors arrays -->
+    <string-array name="font_color_entries" tools:ignore="InconsistentArrays">
+        <item>@string/color_auto_foreground</item>
+        <item>@string/color_white</item>
+        <item>@string/color_gray_light</item>
+        <item>@string/color_gray</item>
+        <item>@string/color_black</item>
+        <item>@string/color_blue_light</item>
+        <item>@string/color_blue_deep</item>
+        <item>@string/color_blue_dark</item>
+        <item>@string/color_green_light</item>
+        <item>@string/color_green_dark</item>
+        <item>@string/color_red_light</item>
+        <item>@string/color_red_dark</item>
+        <item>@string/color_orange_light</item>
+        <item>@string/color_orange_dark</item>
+        <item>@string/color_purple</item>
+    </string-array>
+
+    <string-array name="font_color_values" tools:ignore="InconsistentArrays">
+        <item>colorAutoForeground</item>
+        <item>colorWhite</item>
+        <item>colorGrayLight</item>
+        <item>colorGray</item>
+        <item>colorBlack</item>
+        <item>colorBlueLight</item>
+        <item>colorBlueDeep</item>
+        <item>colorBlueDark</item>
+        <item>colorGreenLight</item>
+        <item>colorGreenDark</item>
+        <item>colorRedLight</item>
+        <item>colorRedDark</item>
+        <item>colorOrangeLight</item>
+        <item>colorOrangeDark</item>
+        <item>colorPurple</item>
+    </string-array>
+
+    <!-- Background colors arrays -->
+    <string-array name="background_color_entries" tools:ignore="InconsistentArrays">
+        <item>@string/color_auto_background</item>
+        <item>@string/color_black</item>
+        <item>@string/color_white</item>
+    </string-array>
+
+    <string-array name="background_color_values" tools:ignore="InconsistentArrays">
+        <item>colorAutoBackground</item>
+        <item>colorBlack</item>
+        <item>colorWhite</item>
+    </string-array>
+</resources>

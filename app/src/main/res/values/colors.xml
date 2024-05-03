@@ -21,6 +21,9 @@ limitations under the License.
     <color name="colorAccent">#ae1d4e</color>
     <color name="colorSnackbarBackgroundColor">#FF9100</color>
 
+    <color name="fabTint">@color/colorWhite</color>
+    <color name="fabBackground">@color/colorAccent</color>
+
     <!-- Couleurs du widget -->
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrayLight">#AAAAAA</color>

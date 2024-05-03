@@ -25,6 +25,8 @@ limitations under the License.
     <string name="widget_font_header">Fenestra-instrumentum</string> <!-- la forme des lettres dans la fenetre outil -->
     <string name="font_size_title">Amplitudo litterarum</string> <!-- taille des lettres -->
     <string name="font_color_title">Color litterarum</string> <!-- couleur des lettres -->
+    <string name="color_auto_foreground">Systema</string>
+    <string name="color_auto_background">Systema</string>
     <string name="color_white">Albus</string>
     <string name="color_gray_light">Clarus canus</string>
     <string name="color_gray">Canus</string>

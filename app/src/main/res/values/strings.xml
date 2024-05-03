@@ -108,6 +108,8 @@ limitations under the License.
     <string name="saved_background_color" translatable="false">background_color</string>
     <string name="default_background_color" translatable="false">colorBlack</string>
     <!-- Colors -->
+    <string name="color_auto_foreground">System</string>
+    <string name="color_auto_background">System</string>
     <string name="color_white">White</string>
     <string name="color_gray_light">Light gray</string>
     <string name="color_gray">Gray</string>

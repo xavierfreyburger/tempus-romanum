@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright 2019 Xavier Freyburger
+Copyright 2024 Xavier Freyburger
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,10 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <resources>
-    <color name="colorPrimary">#607D8B</color>
-    <color name="colorPrimaryDark">#455A64</color>
-    <color name="colorAccent">#FF6D00</color>
+    <color name="colorPrimary">@color/accent_2_600</color>
+    <color name="colorPrimaryDark">@color/accent_2_800</color>
+    <color name="colorAccent">@color/accent_1_200</color>
 
-    <color name="fabTint">@color/colorWhite</color>
-    <color name="fabBackground">@color/colorAccent</color>
+    <color name="fabTint">@color/accent_2_800</color>
+    <color name="fabBackground">@color/accent_1_200</color>
+
+    <color name="colorAutoForeground">@color/accent_1_200</color>
+    <color name="colorAutoBackground">@color/accent_2_800</color>
 </resources>
