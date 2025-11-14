@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Objects;
 
@@ -40,6 +44,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         setTitle(R.string.title_activity_settings);
         setContentView(R.layout.settings_activity);
+
+        LinearLayout linearLayout = findViewById(R.id.settings_root);
+
+        // Décaler le contenu pour la status bar et la navigation bar pour ne pas se supperposer aux éléments système
+        ViewCompat.setOnApplyWindowInsetsListener(linearLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    systemBars.bottom
+            );
+            return insets;
+        });
 
         settingsFragment = new SettingsFragment();
 

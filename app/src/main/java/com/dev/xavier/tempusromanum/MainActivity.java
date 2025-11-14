@@ -24,6 +24,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
@@ -70,6 +74,19 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Padding de l'écran principal pour ne pas se supperposer aux éléments système
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.main_root);
+        ViewCompat.setOnApplyWindowInsetsListener(coordinatorLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    systemBars.bottom
+            );
+            return insets;
+        });
+
         // Initialisation du channel de notifications
         NotificationPermissionHelper.initNotificationChannel(this);
 
@@ -81,6 +98,34 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         eraRadioGroup = findViewById(R.id.eraRadioGroup);
         FloatingActionButton fab = findViewById(R.id.fab);
         FloatingActionButton fab2 = findViewById(R.id.fab2);
+
+//        ViewCompat.setOnApplyWindowInsetsListener(fab, (v, insets) -> {
+//            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+//
+//            int baseBottom = (int) getResources().getDimension(R.dimen.fab_bottom_margin);
+//            lp.bottomMargin = baseBottom + navBars.bottom;
+//
+//            int baseRight = (int) getResources().getDimension(R.dimen.fab_margin_end);
+//            lp.rightMargin = baseRight + navBars.right;
+//
+//            v.setLayoutParams(lp);
+//            return insets;
+//        });
+//
+//        ViewCompat.setOnApplyWindowInsetsListener(fab2, (v, insets) -> {
+//            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+//
+//            int baseBottom = (int) getResources().getDimension(R.dimen.fab_bottom_margin);
+//            lp.bottomMargin = baseBottom + navBars.bottom;
+//
+//            int baseRight = (int) getResources().getDimension(R.dimen.fab2_margin_end);
+//            lp.rightMargin = baseRight + navBars.right;
+//
+//            v.setLayoutParams(lp);
+//            return insets;
+//        });
 
         // Sélection par défaut de l'êre moderne
         if (eraRadioGroup.getCheckedRadioButtonId() == -1) {

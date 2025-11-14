@@ -2,13 +2,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 34
+    compileSdkVersion 36
     defaultConfig {
         applicationId "com.dev.xavier.tempusromanum"
         minSdkVersion 26
-        targetSdkVersion 34
-        versionCode 251
-        versionName "2.5.1"
+        targetSdkVersion 36
+        versionCode 260
+        versionName "2.6.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -23,12 +23,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.preference:preference:1.2.1'
-    testImplementation 'org.testng:testng:6.9.6'
+    testImplementation 'org.testng:testng:7.11.0'
     androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:core:1.7.0'
 }
 
 allprojects {
