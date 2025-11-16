@@ -18,8 +18,8 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -83,16 +83,18 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         setSupportActionBar(toolbar);
 
         /*
-         * Gestion des barres système
+         * Gestion des marges liées aux barres système
          */
         View root = findViewById(R.id.main_root);
         AppBarLayout appBar = findViewById(R.id.appBarLayout);
         View content = findViewById(R.id.content_main);
+        FrameLayout fabContainer = findViewById(R.id.fab_container);
         FloatingActionButton fab = findViewById(R.id.fab);
         FloatingActionButton fab2 = findViewById(R.id.fab2);
-        int fabMarginEnd = getResources().getDimensionPixelSize(R.dimen.fab_margin_end);
-        int fabMarginSecondaryEnd = getResources().getDimensionPixelSize(R.dimen.fab2_margin_end);
-        int fabMarginBottom = getResources().getDimensionPixelSize(R.dimen.fab_bottom_margin);
+        final int basePaddingLeft = fabContainer.getPaddingLeft();
+        final int basePaddingTop = fabContainer.getPaddingTop();
+        final int basePaddingRight = fabContainer.getPaddingRight();
+        final int basePaddingBottom = fabContainer.getPaddingBottom();
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             int right = bars.right;
             int bottom = bars.bottom;
 
-            // ---- AppBar ----
+            // AppBar
             appBar.setPadding(
                     left,
                     top,
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                     appBar.getPaddingBottom()
             );
 
-            // ---- Contenu principal ----
+            // Contenu principal
             content.setPadding(
                     left,
                     content.getPaddingTop(),
@@ -117,17 +119,13 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                     content.getPaddingBottom()
             );
 
-            // ---- FAB principal ----
-            ViewGroup.MarginLayoutParams fabLP = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
-            fabLP.bottomMargin = fabMarginBottom + bottom;
-            fabLP.rightMargin = fabMarginEnd + right;
-            fab.setLayoutParams(fabLP);
-
-            // ---- FAB 2 ----
-            ViewGroup.MarginLayoutParams fab2LP = (ViewGroup.MarginLayoutParams) fab2.getLayoutParams();
-            fab2LP.bottomMargin = fabMarginBottom + bottom;
-            fab2LP.rightMargin = fabMarginSecondaryEnd + right;
-            fab2.setLayoutParams(fab2LP);
+            // Boutons FAB
+            fabContainer.setPadding(
+                    basePaddingLeft + left,
+                    basePaddingTop,
+                    basePaddingRight + right,
+                    basePaddingBottom + bottom
+            );
 
             return insets;
         });

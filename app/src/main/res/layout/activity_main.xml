@@ -42,28 +42,35 @@ limitations under the License.
         android:id="@+id/content_main"
         layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin_end"
-        android:layout_marginBottom="@dimen/fab_bottom_margin"
-        android:contentDescription="@string/clipboard_copy"
-        android:tint="@color/fabTint"
-        app:backgroundTint="@color/fabBackground"
-        app:srcCompat="@drawable/ic_copy" />
+    <FrameLayout
+        android:id="@+id/fab_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab2_margin_end"
-        android:layout_marginBottom="@dimen/fab_bottom_margin"
-        android:contentDescription="@string/today"
-        android:tint="@color/fabTint"
-        app:backgroundTint="@color/fabBackground"
-        app:srcCompat="@drawable/ic_today" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin_end"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
+            android:contentDescription="@string/clipboard_copy"
+            android:tint="@color/fabTint"
+            app:backgroundTint="@color/fabBackground"
+            app:srcCompat="@drawable/ic_copy" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab2_margin_end"
+            android:layout_marginBottom="@dimen/fab_bottom_margin"
+            android:contentDescription="@string/today"
+            android:tint="@color/fabTint"
+            app:backgroundTint="@color/fabBackground"
+            app:srcCompat="@drawable/ic_today" />
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
