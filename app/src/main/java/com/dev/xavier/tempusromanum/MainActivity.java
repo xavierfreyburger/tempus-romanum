@@ -73,13 +73,14 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         // Active l'edge-to-edge officiel
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        setContentView(R.layout.activity_main);
+
+        // Gestion de la barre d'outils
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         /*
          * Gestion des barres système

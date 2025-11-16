@@ -14,10 +14,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_root"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -48,6 +49,7 @@ limitations under the License.
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin_end"
         android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:contentDescription="@string/clipboard_copy"
         android:tint="@color/fabTint"
         app:backgroundTint="@color/fabBackground"
         app:srcCompat="@drawable/ic_copy" />
@@ -59,6 +61,7 @@ limitations under the License.
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab2_margin_end"
         android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:contentDescription="@string/today"
         android:tint="@color/fabTint"
         app:backgroundTint="@color/fabBackground"
         app:srcCompat="@drawable/ic_today" />

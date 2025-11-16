@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.Objects;
+import com.google.android.material.appbar.AppBarLayout;
 
 /**
  * Copyright 2019 Xavier Freyburger
@@ -43,47 +43,30 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle(R.string.title_activity_settings);
+        // Permet l’edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.settings_activity);
 
-        // Edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         View root = findViewById(R.id.settings_root);
+        AppBarLayout appBar = findViewById(R.id.appbar_settings);
         View settingsContainer = findViewById(R.id.settings);
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            int left = sys.left;
+            int top = sys.top;
+            int right = sys.right;
+            int bottom = sys.bottom;
 
-            int left = bars.left;
-            int top = bars.top;
-            int right = bars.right;
-            int bottom = bars.bottom;
+            // Padding AppBar : prend en compte la status bar + les insets latéraux
+            appBar.setPadding(left, top, right, appBar.getPaddingBottom());
 
-            // Padding sur la vue racine (LinearLayout)
-            root.setPadding(left, top, right, bottom);
-
-            // (Optionnel) si tu veux aussi protéger strictement le FrameLayout :
-            // Le FrameLayout reste edge-to-edge mais évite les superpositions
-            //settingsContainer.setPadding(left, 0, right, bottom);
+            // Padding du container des préférences : protège du bas et des côtés
+            settingsContainer.setPadding(left, 0, right, bottom);
 
             return insets;
         });
-
-
-
-//        LinearLayout linearLayout = findViewById(R.id.settings_root);
-        // Décaler le contenu pour la status bar et la navigation bar pour ne pas se supperposer aux éléments système
-//        ViewCompat.setOnApplyWindowInsetsListener(linearLayout, (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(
-//                    systemBars.left,
-//                    systemBars.top,
-//                    systemBars.right,
-//                    systemBars.bottom
-//            );
-//            return insets;
-//        });
 
         settingsFragment = new SettingsFragment();
 
@@ -91,9 +74,6 @@ public class SettingsActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.settings, settingsFragment)
                 .commit();
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         // Si demandé, scroller jusqu'à l'option demandée
         Bundle b = getIntent().getExtras();

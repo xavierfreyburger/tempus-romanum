@@ -37,6 +37,8 @@ limitations under the License.
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="open">Open</string>
+    <string name="clipboard_copy">Copy</string>
+    <string name="today">Today</string>
 
     <!-- Notifications strings -->
     <string name="notification_nones_title">"Today it's the nones "</string>
