@@ -17,6 +17,8 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,13 +26,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -71,19 +74,60 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Padding de l'écran principal pour ne pas se supperposer aux éléments système
-        CoordinatorLayout coordinatorLayout = findViewById(R.id.main_root);
-        ViewCompat.setOnApplyWindowInsetsListener(coordinatorLayout, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(
-                    systemBars.left,
-                    systemBars.top,
-                    systemBars.right,
-                    systemBars.bottom
+        // Active l'edge-to-edge officiel
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        /*
+         * Gestion des barres système
+         */
+        View root = findViewById(R.id.main_root);
+        AppBarLayout appBar = findViewById(R.id.appBarLayout);
+        View content = findViewById(R.id.content_main);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab2 = findViewById(R.id.fab2);
+        int fabMarginEnd = getResources().getDimensionPixelSize(R.dimen.fab_margin_end);
+        int fabMarginSecondaryEnd = getResources().getDimensionPixelSize(R.dimen.fab2_margin_end);
+        int fabMarginBottom = getResources().getDimensionPixelSize(R.dimen.fab_bottom_margin);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            int left = bars.left;
+            int top = bars.top;
+            int right = bars.right;
+            int bottom = bars.bottom;
+
+            // ---- AppBar ----
+            appBar.setPadding(
+                    left,
+                    top,
+                    right,
+                    appBar.getPaddingBottom()
             );
+
+            // ---- Contenu principal ----
+            content.setPadding(
+                    left,
+                    content.getPaddingTop(),
+                    right,
+                    content.getPaddingBottom()
+            );
+
+            // ---- FAB principal ----
+            ViewGroup.MarginLayoutParams fabLP = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
+            fabLP.bottomMargin = fabMarginBottom + bottom;
+            fabLP.rightMargin = fabMarginEnd + right;
+            fab.setLayoutParams(fabLP);
+
+            // ---- FAB 2 ----
+            ViewGroup.MarginLayoutParams fab2LP = (ViewGroup.MarginLayoutParams) fab2.getLayoutParams();
+            fab2LP.bottomMargin = fabMarginBottom + bottom;
+            fab2LP.rightMargin = fabMarginSecondaryEnd + right;
+            fab2.setLayoutParams(fab2LP);
+
             return insets;
         });
 
@@ -96,36 +140,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         monthEditText = findViewById(R.id.monthEditText);
         yearEditText = findViewById(R.id.yearEditText);
         eraRadioGroup = findViewById(R.id.eraRadioGroup);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        FloatingActionButton fab2 = findViewById(R.id.fab2);
-
-//        ViewCompat.setOnApplyWindowInsetsListener(fab, (v, insets) -> {
-//            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
-//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-//
-//            int baseBottom = (int) getResources().getDimension(R.dimen.fab_bottom_margin);
-//            lp.bottomMargin = baseBottom + navBars.bottom;
-//
-//            int baseRight = (int) getResources().getDimension(R.dimen.fab_margin_end);
-//            lp.rightMargin = baseRight + navBars.right;
-//
-//            v.setLayoutParams(lp);
-//            return insets;
-//        });
-//
-//        ViewCompat.setOnApplyWindowInsetsListener(fab2, (v, insets) -> {
-//            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
-//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-//
-//            int baseBottom = (int) getResources().getDimension(R.dimen.fab_bottom_margin);
-//            lp.bottomMargin = baseBottom + navBars.bottom;
-//
-//            int baseRight = (int) getResources().getDimension(R.dimen.fab2_margin_end);
-//            lp.rightMargin = baseRight + navBars.right;
-//
-//            v.setLayoutParams(lp);
-//            return insets;
-//        });
 
         // Sélection par défaut de l'êre moderne
         if (eraRadioGroup.getCheckedRadioButtonId() == -1) {

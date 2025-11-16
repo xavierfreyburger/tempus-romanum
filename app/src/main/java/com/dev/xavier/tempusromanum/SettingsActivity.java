@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -13,6 +13,7 @@ import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Objects;
@@ -45,19 +46,44 @@ public class SettingsActivity extends AppCompatActivity {
         setTitle(R.string.title_activity_settings);
         setContentView(R.layout.settings_activity);
 
-        LinearLayout linearLayout = findViewById(R.id.settings_root);
+        // Edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        View root = findViewById(R.id.settings_root);
+        View settingsContainer = findViewById(R.id.settings);
 
-        // Décaler le contenu pour la status bar et la navigation bar pour ne pas se supperposer aux éléments système
-        ViewCompat.setOnApplyWindowInsetsListener(linearLayout, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(
-                    systemBars.left,
-                    systemBars.top,
-                    systemBars.right,
-                    systemBars.bottom
-            );
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            int left = bars.left;
+            int top = bars.top;
+            int right = bars.right;
+            int bottom = bars.bottom;
+
+            // Padding sur la vue racine (LinearLayout)
+            root.setPadding(left, top, right, bottom);
+
+            // (Optionnel) si tu veux aussi protéger strictement le FrameLayout :
+            // Le FrameLayout reste edge-to-edge mais évite les superpositions
+            //settingsContainer.setPadding(left, 0, right, bottom);
+
             return insets;
         });
+
+
+
+//        LinearLayout linearLayout = findViewById(R.id.settings_root);
+        // Décaler le contenu pour la status bar et la navigation bar pour ne pas se supperposer aux éléments système
+//        ViewCompat.setOnApplyWindowInsetsListener(linearLayout, (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(
+//                    systemBars.left,
+//                    systemBars.top,
+//                    systemBars.right,
+//                    systemBars.bottom
+//            );
+//            return insets;
+//        });
 
         settingsFragment = new SettingsFragment();
 
