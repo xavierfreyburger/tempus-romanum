@@ -121,4 +121,5 @@ limitations under the License.
     <string name="request_permission_notifications_channel">Le canal de notification est désactivé.\nVeuillez l\'activer sur l\'écran suivant.</string>
     <string name="open">Ouvrir</string>
     <string name="clipboard_copy">Copier</string>
+    <string name="font_bold_title">Police en gras</string>
 </resources>

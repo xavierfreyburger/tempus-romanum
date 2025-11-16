@@ -10,7 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.TypedValue;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.StyleSpan;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -46,19 +49,22 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 
         // 1.1 font size
-        int fontSize = Integer.parseInt(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
+        final int fontSize = Integer.parseInt(pref.getString(context.getString(R.string.saved_font_size), context.getString(R.string.default_font_size)));
 
-        // 1.2 font color
+        // 1.2 Bold font
+        final boolean fontBold = pref.getBoolean(context.getString(R.string.saved_font_bold),Boolean.parseBoolean(context.getString(R.string.default_font_bold)));
+
+        // 1.3 font color
         final String colorName = pref.getString(context.getString(R.string.saved_font_color), context.getString(R.string.default_font_color));
         @SuppressLint("DiscouragedApi") final int colorResId = context.getResources().getIdentifier(colorName, "color", context.getPackageName());
         final int fontColor = ContextCompat.getColor(context, colorResId);
 
-        // 1.3 Background color
+        // 1.4 Background color
         final String backgroundColorName = pref.getString(context.getString(R.string.saved_background_color), context.getString(R.string.default_background_color));
         @SuppressLint("DiscouragedApi") final int backgroundColorResId = context.getResources().getIdentifier(backgroundColorName, "color", context.getPackageName());
         final int backgroundColor = ContextCompat.getColor(context, backgroundColorResId);
 
-        // 1.4 Background transparency ratio (value is actually stored as opacity [0-100] we need to transforme it to transparency)
+        // 1.5 Background transparency ratio (value is actually stored as opacity [0-100] we need to transforme it to transparency)
         final int backgroundTransparency = 100 - pref.getInt(context.getString(R.string.saved_background_transparency), Integer.parseInt(context.getString(R.string.default_background_transparency)));
         final float backgroundTransparencyRatio = backgroundTransparency / (float) 100;
 
@@ -101,9 +107,17 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.tempus_romanum_widget);
 
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+
+
+        SpannableString span = new SpannableString(widgetText);
+        // Set font normal or bold
+        span.setSpan(new StyleSpan(fontBold ? Typeface.BOLD : Typeface.NORMAL), 0, widgetText.length(), 0);
+
         // Set font size
-        views.setTextViewTextSize(R.id.appwidget_text, TypedValue.COMPLEX_UNIT_SP, fontSize);
+        span.setSpan(new AbsoluteSizeSpan(fontSize, true), 0, widgetText.length(), 0);
+
+        views.setTextViewText(R.id.appwidget_text, span);
+
         // Set font color
         views.setTextColor(R.id.appwidget_text, fontColor);
         // Set background color with transparency

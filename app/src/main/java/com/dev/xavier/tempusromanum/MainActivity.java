@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             case "year_reference":
             case "shorten_era":
             case "font_size":
+            case "font_bold":
             case "font_color":
             case "background_color":
             case "background_transparency":

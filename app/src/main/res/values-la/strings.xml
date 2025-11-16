@@ -122,4 +122,5 @@ limitations under the License.
     <string name="request_permission_notifications_channel">Annuntationis canalis prohibetur.\nAperi quaeso eum sequenti in ostentore.</string>
     <string name="open">Aperire</string>
     <string name="clipboard_copy">Exscribere</string>
+    <string name="font_bold_title">Litterae crassae</string>
 </resources>
