@@ -21,5 +21,4 @@ limitations under the License.
     android:minHeight="40dp"
     android:previewImage="@drawable/appwidget_preview"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen|keyguard" />
