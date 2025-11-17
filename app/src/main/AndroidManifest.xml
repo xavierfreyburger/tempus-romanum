@@ -46,6 +46,16 @@ limitations under the License.
                 android:resource="@xml/tempus_romanum_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".DailyWidgetUpdateReceiver"
+            android:exported="false" />
+
+        <receiver android:name=".WidgetBootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".NotificationPublisher"
             android:exported="true">
             <intent-filter>
