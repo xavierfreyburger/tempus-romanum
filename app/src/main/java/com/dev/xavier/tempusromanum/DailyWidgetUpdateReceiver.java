@@ -28,8 +28,6 @@ public class DailyWidgetUpdateReceiver extends BroadcastReceiver {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName tempusRomanumWidget = new ComponentName(context, TempusRomanumWidget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(tempusRomanumWidget);
-        if (appWidgetIds != null && appWidgetIds.length > 0) {
-            new TempusRomanumWidget().onUpdate(context, appWidgetManager, appWidgetIds);
-        }
+        new TempusRomanumWidget().onUpdate(context, appWidgetManager, appWidgetIds);
     }
 }

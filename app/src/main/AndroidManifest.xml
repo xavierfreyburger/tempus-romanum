@@ -50,9 +50,12 @@ limitations under the License.
             android:name=".DailyWidgetUpdateReceiver"
             android:exported="false" />
 
-        <receiver android:name=".WidgetBootReceiver" android:exported="true">
+        <receiver android:name=".WidgetSchedulerReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
 

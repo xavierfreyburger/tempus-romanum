@@ -1,6 +1,8 @@
 package com.dev.xavier.tempusromanum;
 
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,11 +21,15 @@ import android.content.Intent;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class WidgetBootReceiver extends BroadcastReceiver {
+public class WidgetSchedulerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            TempusRomanumWidget.scheduleMidnightUpdate(context);
+        // Mise à jour immédiate du widget
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context, TempusRomanumWidget.class);
+        int[] ids = manager.getAppWidgetIds(componentName);
+        if(ids != null) {
+            TempusRomanumWidget.updateAllAppWidget(context, manager, ids);
         }
     }
 }

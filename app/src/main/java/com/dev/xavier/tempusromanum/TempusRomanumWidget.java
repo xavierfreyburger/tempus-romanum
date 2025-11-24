@@ -58,9 +58,20 @@ public class TempusRomanumWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+        updateAllAppWidget(context, appWidgetManager, appWidgetIds);
+    }
+
+    public static void updateAllAppWidget(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        if(appWidgetIds != null && appWidgetIds.length > 0) {
+            // On met à jour toutes les instances du widget
+            for (int appWidgetId : appWidgetIds) {
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
+            // On planifie la prochaine mise à jour automatique du widget pour demain minuit
+            scheduleMidnightUpdate(context);
+        } else {
+            // Aucun widget -> désactivation de la mise à jour automatique
+            cancelMidnightUpdate(context);
         }
     }
 
@@ -172,6 +183,10 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         return Color.argb(alpha, r, g, b);
     }
 
+    /**
+     * Planifie la mise à jour du widget pour demain minuit
+     * @param context Contexte
+     */
     public static void scheduleMidnightUpdate(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyWidgetUpdateReceiver.class);
@@ -192,16 +207,11 @@ public class TempusRomanumWidget extends AppWidgetProvider {
         calendar.add(Calendar.DAY_OF_YEAR, 1);
 
         if (alarmManager != null) {
-            alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY,
-                    pendingIntent
-            );
+            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         }
     }
 
-    private void cancelMidnightUpdate(Context context) {
+    private static void cancelMidnightUpdate(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyWidgetUpdateReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
